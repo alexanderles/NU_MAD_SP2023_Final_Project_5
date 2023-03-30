@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/org_profile_owner_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTintMode="add"
+    tools:context=".OrgProfileOwnerView">
+
+    <TextView
+        android:id="@+id/profile_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/profile_text"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/org_image_user_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:contentDescription="@string/northeaster_default"
+        android:src="@drawable/default_image"
+        app:layout_constraintStart_toStartOf="@+id/profile_title"
+        app:layout_constraintTop_toBottomOf="@+id/profile_title" />
+
+    <TextView
+        android:id="@+id/organization_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/org_image_user_view"
+        app:layout_constraintTop_toTopOf="@+id/org_image_user_view" />
+
+    <TextView
+        android:id="@+id/organization_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/org_image_user_view"
+        app:layout_constraintStart_toStartOf="@+id/organization_name"
+        app:layout_constraintTop_toBottomOf="@+id/organization_name" />
+
+    <View
+        android:id="@+id/org_event_div"
+        android:layout_width="409dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/org_image_user_view" />
+
+    <TextView
+        android:id="@+id/events_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/events_text"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/org_event_div" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/organization_events_recyclerview"
+        android:layout_width="409dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_div"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/events_title" />
+
+    <View
+        android:id="@+id/button_div"
+        android:layout_width="409dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="4dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/button_add_event"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_add_event"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:backgroundTint="@color/white"
+        android:fontFamily="@font/roboto"
+        android:text="@string/add_event_text"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        app:icon="@drawable/add_event"
+        app:iconGravity="end"
+        app:iconTint="@color/campus_hub_color"
+        app:layout_constraintBottom_toTopOf="@+id/between_button_div"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:id="@+id/between_button_div"
+        android:layout_width="409dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="4dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/button_sign_out"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_sign_out"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        android:foregroundTintMode="add"
+        android:shadowColor="@color/campus_hub_color"
+        android:text="@string/sign_out_text"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        app:backgroundTint="@color/white"
+        app:icon="@drawable/logout_icon"
+        app:iconGravity="end"
+        app:iconTint="@color/campus_hub_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

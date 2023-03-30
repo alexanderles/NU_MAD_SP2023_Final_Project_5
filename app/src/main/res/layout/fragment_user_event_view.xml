@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_event_view_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserEventView" >
+
+    <TextView
+        android:id="@+id/event_details_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/event_details_image"
+        app:layout_constraintTop_toBottomOf="@+id/event_details_date" />
+
+    <TextView
+        android:id="@+id/event_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/event_title"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/event_details_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:contentDescription="@string/northeaster_default"
+        android:src="@drawable/default_image"
+        app:layout_constraintStart_toStartOf="@+id/event_title_text"
+        app:layout_constraintTop_toBottomOf="@+id/event_title_text" />
+
+    <TextView
+        android:id="@+id/event_details_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/event_details_image"
+        app:layout_constraintTop_toTopOf="@+id/event_details_image" />
+
+    <TextView
+        android:id="@+id/event_details_organizer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/event_details_title"
+        app:layout_constraintTop_toBottomOf="@+id/event_details_title" />
+
+    <TextView
+        android:id="@+id/event_details_organizer_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/event_details_title"
+        app:layout_constraintTop_toBottomOf="@+id/event_details_organizer" />
+
+    <TextView
+        android:id="@+id/event_details_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/event_details_image"
+        app:layout_constraintTop_toBottomOf="@+id/event_details_image" />
+
+    <TextView
+        android:id="@+id/event_details_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/event_details_location"
+        app:layout_constraintTop_toBottomOf="@+id/event_details_location" />
+
+    <Button
+        android:id="@+id/button_user_event_register"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:backgroundTint="@color/campus_hub_color"
+        android:fontFamily="@font/roboto"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/register_text"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/event_details_description" />
+</androidx.constraintlayout.widget.ConstraintLayout>

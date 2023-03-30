@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">CampusHub</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="campus_hub_name">CampusHub</string>
+    <string name="campus_hub_image">Campus Hub Image</string>
+    <string name="upcoming_events_text">Upcoming Events</string>
+    <string name="northeaster_default">Default Northeastern Image</string>
+    <string name="profile_text">Profile</string>
+    <string name="events_text">Events</string>
+    <string name="sign_out_text">Sign out</string>
+    <string name="add_event_text">Add event</string>
+    <string name="event_title">Event</string>
+    <string name="register_text">Register</string>
+    <string name="delete_text">Delete</string>
+    <string name="edit_text">Edit</string>
 </resources>
