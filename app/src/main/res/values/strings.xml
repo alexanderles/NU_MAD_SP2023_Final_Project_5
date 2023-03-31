@@ -23,4 +23,21 @@
     <string name="name_text">Name</string>
     <string name="email_text">Email</string>
     <string name="phone_number_text">Phone Number</string>
+    <string name="club_text">Sign Up as Club</string>
+    <string name="member_text">Sign Up as Member</string>
+    <string name="login_text" />
+    <string name="account_text">Have an account?</string>
+    <string name="login">Login</string>
+    <string name="Loginaccount_text">Login to your account</string>
+    <string name="email_text">Email</string>
+    <string name="password_text">Password</string>
+    <string name="login2_text">Login</string>
+    <string name="newaccount">Create a new account</string>
+    <string name="member_signup">Member Sign Up</string>
+    <string name="name_text">Name</string>
+    <string name="email2_text">Email</string>
+    <string name="password2">Password</string>
+    <string name="login3">Login</string>
+    <string name="orgainzation">Organization Sign Up</string>
+    <string name="orgname">Organization Name</string>
 </resources>
