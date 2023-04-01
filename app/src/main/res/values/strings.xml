@@ -40,4 +40,6 @@
     <string name="login3">Login</string>
     <string name="orgainzation">Organization Sign Up</string>
     <string name="orgname">Organization Name</string>
+    <string name="save_text">Save</string>
+    <string name="profile_photo_text">Profile Photo</string>
 </resources>
