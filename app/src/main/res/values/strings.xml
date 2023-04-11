@@ -42,4 +42,12 @@
     <string name="orgname">Organization Name</string>
     <string name="save_text">Save</string>
     <string name="profile_photo_text">Profile Photo</string>
+    <string name="name_month_placeholder">Month</string>
+    <string name="name_sun">SUN</string>
+    <string name="name_mon">MON</string>
+    <string name="name_tues">TUES</string>
+    <string name="name_wed">WED</string>
+    <string name="name_thur">THUR</string>
+    <string name="name_fri">FRI</string>
+    <string name="name_sat">SAT</string>
 </resources>
