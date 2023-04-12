@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "975744008182",
+    "project_id": "finalproject-c9934",
+    "storage_bucket": "finalproject-c9934.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975744008182:android:03ae0029e351ff1124d1d7",
+        "android_client_info": {
+          "package_name": "com.example.campushub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975744008182-g4k1rjk72o30onl9cqe9jeo5gukqacr1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAl-dZ-39nnhast3BZU_kit3xMr-iMIsUA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975744008182-g4k1rjk72o30onl9cqe9jeo5gukqacr1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
