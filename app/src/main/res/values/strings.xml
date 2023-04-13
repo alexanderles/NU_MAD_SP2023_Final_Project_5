@@ -21,7 +21,6 @@
     <string name="search_hint_text">Search Organizations</string>
     <string name="calendar_text">Calendar</string>
     <string name="name_text">Name</string>
-    <string name="email_text">Email</string>
     <string name="phone_number_text">Phone Number</string>
     <string name="club_text">Sign Up as Club</string>
     <string name="member_text">Sign Up as Member</string>
@@ -40,4 +39,12 @@
     <string name="orgname">Organization Name</string>
     <string name="save_text">Save</string>
     <string name="profile_photo_text">Profile Photo</string>
+    <string name="firstname">First Name</string>
+    <string name="firstname2">First Name</string>
+    <string name="lastname">Last Name</string>
+    <string name="lastname2">Last Name</string>
+    <string name="register">Register</string>
+    <string name="Register2">Register</string>
+    <string name="registerclub">Register as a club</string>
+    <string name="RegisterMember">Register as a memeber</string>
 </resources>

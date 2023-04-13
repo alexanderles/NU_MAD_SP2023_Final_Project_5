@@ -7,55 +7,87 @@
     android:layout_height="match_parent"
     tools:context=".LandingFragment" >
 
+    <EditText
+        android:id="@+id/editTextLoginEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#00E5FF"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="@+id/account_text"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="@+id/account_text"
+        app:layout_constraintTop_toBottomOf="@+id/account_text" />
+
+    <EditText
+        android:id="@+id/editTextLoginPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#2979FF"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="@+id/editTextLoginEmail"
+        app:layout_constraintStart_toStartOf="@+id/editTextLoginEmail"
+        app:layout_constraintTop_toBottomOf="@+id/editTextLoginEmail" />
+
     <ImageView
         android:id="@+id/campusHubImage"
         android:layout_width="326dp"
         android:layout_height="322dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="16dp"
         android:src="@drawable/campushub"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button_signupclub"
+        android:id="@+id/registerclub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/club_text"
+        android:layout_marginTop="28dp"
+        android:text="@string/registerclub"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/campusHubImage"
         app:rippleColor="@android:color/holo_blue_dark" />
 
     <Button
-        android:id="@+id/button_signupmemeber"
+        android:id="@+id/button_registerMemeber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/member_text"
-        app:layout_constraintEnd_toEndOf="@+id/button_signupclub"
-        app:layout_constraintStart_toStartOf="@+id/button_signupclub"
-        app:layout_constraintTop_toBottomOf="@+id/button_signupclub" />
+        android:layout_marginTop="24dp"
+        android:text="@string/RegisterMember"
+        app:layout_constraintEnd_toEndOf="@+id/registerclub"
+        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintStart_toStartOf="@+id/registerclub"
+        app:layout_constraintTop_toBottomOf="@+id/registerclub" />
 
     <TextView
         android:id="@+id/account_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:text="@string/account_text"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/button_signupmemeber"
-        app:layout_constraintStart_toStartOf="@+id/button_signupmemeber"
-        app:layout_constraintTop_toBottomOf="@+id/button_signupmemeber" />
+        app:layout_constraintEnd_toEndOf="@+id/button_registerMemeber"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="@+id/button_registerMemeber"
+        app:layout_constraintTop_toBottomOf="@+id/button_registerMemeber" />
 
     <Button
         android:id="@+id/button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/login"
-        app:layout_constraintEnd_toEndOf="@+id/account_text"
-        app:layout_constraintHorizontal_bias="0.437"
-        app:layout_constraintStart_toStartOf="@+id/account_text"
-        app:layout_constraintTop_toBottomOf="@+id/account_text" />
+        app:layout_constraintEnd_toEndOf="@+id/editTextLoginPassword"
+        app:layout_constraintStart_toStartOf="@+id/editTextLoginPassword"
+        app:layout_constraintTop_toBottomOf="@+id/editTextLoginPassword" />
 </androidx.constraintlayout.widget.ConstraintLayout>
