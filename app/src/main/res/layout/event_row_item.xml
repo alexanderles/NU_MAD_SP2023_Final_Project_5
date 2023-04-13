@@ -36,6 +36,19 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/event_organizer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto"
+                android:lineHeight="21dp"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_title" />
+
+            <TextView
                 android:id="@+id/event_date_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,7 +58,7 @@
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/event_title"
-                app:layout_constraintTop_toBottomOf="@+id/event_title" />
+                app:layout_constraintTop_toBottomOf="@+id/event_organizer" />
 
             <TextView
                 android:id="@+id/event_location"
