@@ -7,8 +7,11 @@ import android.os.Bundle;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity implements OrganizationSignUpFragment.IregisterFragmentAction,
-        MemberSignUpFragment.ImemberRegisterFragmentAction, LandingFragment.IloginFragmentAction {
+public class MainActivity extends AppCompatActivity implements
+        OrganizationSignUpFragment.IregisterFragmentAction,
+        MemberSignUpFragment.ImemberRegisterFragmentAction,
+        LandingFragment.IloginFragmentAction,
+        EventsAdapter.IEventRowActions{
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -32,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements OrganizationSignU
                         .replace(R.id.containerMain, OrgProfileOwnerView.newInstance(),"homeFragment")
                         .addToBackStack("landingFragment")
                         .commit();
-            }else if(is_Orgprofile == true) {
+            }else if(!is_Orgprofile) {
                 //The user is authenticated, Populating The Home Fragment....
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.containerMain, HomeFragment.newInstance(),"homeFragment")
@@ -105,5 +108,10 @@ public class MainActivity extends AppCompatActivity implements OrganizationSignU
                 .replace(R.id.containerMain, MemberSignUpFragment.newInstance(), "memRegisterFragment")
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void loadEventDetailsFragment(Event event) {
+
     }
 }

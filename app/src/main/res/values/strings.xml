@@ -47,4 +47,5 @@
     <string name="Register2">Register</string>
     <string name="registerclub">Register as a club</string>
     <string name="RegisterMember">Register as a memeber</string>
+    <string name="email_text">Email</string>
 </resources>
