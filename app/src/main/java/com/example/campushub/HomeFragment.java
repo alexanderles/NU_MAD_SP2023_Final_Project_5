@@ -2,46 +2,59 @@ package com.example.campushub;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_EVENT = "events";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ArrayList<Event> mEvents;
+
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
+    private RecyclerView recyclerView;
+    private EventsAdapter eventsAdapter;
+    private RecyclerView.LayoutManager recyclerViewLayoutManager;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_EVENT, new ArrayList<Event>());
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,16 +62,133 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        Bundle args = getArguments();
+        if (args != null) {
+            if (args.containsKey(ARG_EVENT)) {
+                mEvents = (ArrayList<Event>) args.getSerializable(ARG_EVENT);
+            }
         }
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+        loadData();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+
+        recyclerView = rootView.findViewById(R.id.upcoming_events_recyclerview);
+        recyclerViewLayoutManager = new LinearLayoutManager(getContext());
+        eventsAdapter = new EventsAdapter(mEvents, getContext());
+        recyclerView.setLayoutManager(recyclerViewLayoutManager);
+        recyclerView.setAdapter(eventsAdapter);
+
+        db.collection("users")
+                .document(mUser.getEmail())
+                .collection("events")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if(error == null){
+//                            retrieving all the elements from Firebase....
+                            ArrayList<Event> newEvents = new ArrayList<>();
+                            for(DocumentSnapshot document : value.getDocuments()){
+                                String eventReference = document.get("eventId").toString();
+                                db.collection("events")
+                                        .document(eventReference)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot snap = task.getResult();
+                                                    Event newEvent = new Event(
+                                                            eventReference,
+                                                            snap.get("eventName").toString(),
+                                                            snap.get("eventOwnerName").toString(),
+                                                            snap.get("eventOwnerEmail").toString(),
+                                                            snap.get("eventOrganizerImage").toString(),
+                                                            snap.get("eventLocation").toString(),
+                                                            snap.get("eventTime").toString(),
+                                                            snap.get("eventDescription").toString()
+                                                    );
+                                                    DateTimeFormatter dateFormatter =
+                                                            DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                                                    LocalDate dateTime = LocalDate.parse(
+                                                            newEvent.getEventTime(),
+                                                            dateFormatter);
+                                                    if (dateTime.compareTo(LocalDate.now()) > 0) {
+                                                        newEvents.add(newEvent);
+                                                    }
+                                                }
+                                            }
+                                        });
+                            }
+                            eventsAdapter.setEvents(newEvents);
+                            eventsAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+
+        return rootView;
+    }
+
+    private void loadData() {
+        ArrayList<Event> events = new ArrayList<>();
+
+        db.collection("users")
+                .document(mUser.getEmail())
+                .collection("events")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for(QueryDocumentSnapshot  document : task.getResult()){
+                                String eventReference = document.get("eventId").toString();
+                                db.collection("events")
+                                        .document(eventReference)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot snap = task.getResult();
+                                                    Event newEvent = new Event(
+                                                            eventReference,
+                                                            snap.get("eventName").toString(),
+                                                            snap.get("eventOwnerName").toString(),
+                                                            snap.get("eventOwnerEmail").toString(),
+                                                            snap.get("eventOrganizerImage").toString(),
+                                                            snap.get("eventLocation").toString(),
+                                                            snap.get("eventTime").toString(),
+                                                            snap.get("eventDescription").toString()
+                                                    );
+                                                    DateTimeFormatter dateFormatter =
+                                                            DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                                                    LocalDate dateTime = LocalDate.parse(
+                                                            newEvent.getEventTime(),
+                                                            dateFormatter);
+                                                    if (dateTime.compareTo(LocalDate.now()) > 0) {
+                                                        events.add(newEvent);
+                                                    }
+                                                }
+                                            }
+                                        });
+                            }
+                            updateRecyclerView(events);
+                        }
+                    }
+                });
+    }
+
+    public void updateRecyclerView(ArrayList<Event> events){
+        eventsAdapter.setEvents(events);
+        eventsAdapter.notifyDataSetChanged();
     }
 }

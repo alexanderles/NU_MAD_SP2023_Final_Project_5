@@ -36,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="50dp"
+        android:fontFamily="sans-serif"
         android:text="@string/calendar_text"
         android:textSize="24sp"
         android:textStyle="bold"

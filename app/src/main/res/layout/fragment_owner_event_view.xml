@@ -8,17 +8,6 @@
     tools:context=".OwnerEventView">
 
     <TextView
-        android:id="@+id/event_details_location_owner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/roboto"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/event_details_image_owner"
-        app:layout_constraintTop_toBottomOf="@+id/event_details_date_owner" />
-
-    <TextView
         android:id="@+id/event_title_text_owner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -86,6 +75,17 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/event_details_image_owner"
         app:layout_constraintTop_toBottomOf="@+id/event_details_image_owner" />
+
+    <TextView
+        android:id="@+id/event_details_location_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/event_details_image_owner"
+        app:layout_constraintTop_toBottomOf="@+id/event_details_date_owner" />
 
     <TextView
         android:id="@+id/event_details_description_owner"
