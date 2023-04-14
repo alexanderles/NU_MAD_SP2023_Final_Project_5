@@ -20,13 +20,11 @@
     <string name="account_info_text">Account Info</string>
     <string name="search_hint_text">Search Organizations</string>
     <string name="calendar_text">Calendar</string>
-    <string name="name_text">Name</string>
-    <string name="email_text">Email</string>
     <string name="phone_number_text">Phone Number</string>
     <string name="club_text">Sign Up as Club</string>
     <string name="member_text">Sign Up as Member</string>
     <string name="login_text" />
-    <string name="account_text">Have an account?</string>
+    <string name="have_account_text">Have an account?</string>
     <string name="login">Login</string>
     <string name="Loginaccount_text">Login to your account</string>
     <string name="email_text">Email</string>
@@ -50,4 +48,5 @@
     <string name="name_thur">THUR</string>
     <string name="name_fri">FRI</string>
     <string name="name_sat">SAT</string>
+    <string name="name_day_placeholder">1</string>
 </resources>

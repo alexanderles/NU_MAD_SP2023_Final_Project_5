@@ -5,10 +5,10 @@
     android:id="@+id/constraintLayoutMonth"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CalendarFragmentMonth" >
+    tools:context=".Calendar.CalendarFragmentMonth" >
 
     <TextView
-        android:id="@+id/textView_month_name"
+        android:id="@+id/textView_month_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -28,21 +28,22 @@
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:src="@drawable/previous"
-        app:layout_constraintBottom_toBottomOf="@+id/textView_month_name"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_month_year"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView_month_name" />
+        app:layout_constraintTop_toTopOf="@+id/textView_month_year" />
 
     <ImageView
-        android:id="@+id/imageViewnext_month"
+        android:id="@+id/imageView_next_month"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="16dp"
         android:src="@drawable/next"
-        app:layout_constraintBottom_toBottomOf="@+id/textView_month_name"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_month_year"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView_month_name" />
+        app:layout_constraintTop_toTopOf="@+id/textView_month_year" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -51,7 +52,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_month_name">
+        app:layout_constraintTop_toBottomOf="@+id/textView_month_year">
 
         <TextView
             android:id="@+id/textView_sunday"
@@ -117,4 +118,17 @@
             android:textSize="16sp" />
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/calendarRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

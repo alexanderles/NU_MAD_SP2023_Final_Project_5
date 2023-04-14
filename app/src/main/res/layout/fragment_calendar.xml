@@ -5,7 +5,7 @@
     android:id="@+id/CalendarConstrainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CalendarFragment" >
+    tools:context=".Calendar.CalendarFragment" >
 
     <ImageView
         android:id="@+id/imageView_calendar_logo"
@@ -57,7 +57,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:name="com.example.campushub.CalendarFragmentMonth"
+        android:name="com.example.campushub.Calendar.CalendarFragmentMonth"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
