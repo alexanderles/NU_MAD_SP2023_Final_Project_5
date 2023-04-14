@@ -146,4 +146,8 @@ public class CalendarFragmentMonth extends Fragment implements CalendarAdapter.O
             Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
         }
     }
+
+    public interface ICalendarMonthActions {
+        void dayClicked(LocalDate)
+    }
 }
