@@ -4,19 +4,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.example.campushub.Calendar.CalendarFragment;
+import com.example.campushub.Calendar.CalendarFragmentDay;
 import com.example.campushub.Calendar.CalendarFragmentMonth;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.time.LocalDate;
 
 public class MainActivity extends AppCompatActivity implements
         OrganizationSignUpFragment.IregisterFragmentAction,
         MemberSignUpFragment.ImemberRegisterFragmentAction,
         LandingFragment.IloginFragmentAction,
         EventsAdapter.IEventRowActions,
-        NavigationFragment.INavigationActions {
+        NavigationFragment.INavigationActions,
+        CalendarFragmentMonth.ICalendarMonthActions{
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -146,6 +151,9 @@ public class MainActivity extends AppCompatActivity implements
                 .replace(R.id.containerMain, CalendarFragment.newInstance(),"homeFragment")
                 .addToBackStack("Prev")
                 .commit();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragmentContainerViewCalendar, CalendarFragmentMonth.newInstance(),"dayFragment")
+                .commit();
     }
 
     @Override
@@ -153,6 +161,14 @@ public class MainActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.containerMain, UserProfileOwnerView.newInstance(),"homeFragment")
                 .addToBackStack("Prev")
+                .commit();
+    }
+
+    @Override
+    public void dayClicked(LocalDate selectedDate) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainerViewCalendar, CalendarFragmentDay.newInstance(selectedDate),"dayFragment")
+                .addToBackStack("Month")
                 .commit();
     }
 }
