@@ -48,4 +48,11 @@
     <string name="registerclub">Register as a club</string>
     <string name="RegisterMember">Register as a memeber</string>
     <string name="email_text">Email</string>
+    <string name="calendar_view">Calendar View</string>
+    <string name="add_edit_event_title">Add or Edit an Event</string>
+    <string name="event_time_hint">Event time...</string>
+    <string name="event_name_hint">Event name...</string>
+    <string name="event_location_hint">Event location...</string>
+    <string name="event_description_hint">Event description...</string>
+    <string name="create_event_text">Create</string>
 </resources>
