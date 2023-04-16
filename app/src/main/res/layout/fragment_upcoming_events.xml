@@ -5,7 +5,7 @@
     android:id="@+id/CalendarConstrainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CalendarFragment" >
+    tools:context=".Calendar.CalendarFragment" >
 
     <ImageView
         android:id="@+id/imageView_upcoming_events_logo"

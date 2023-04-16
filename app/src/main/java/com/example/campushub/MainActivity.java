@@ -1,11 +1,19 @@
 package com.example.campushub;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
+import com.example.campushub.Calendar.CalendarFragment;
+import com.example.campushub.Calendar.CalendarFragmentDay;
+import com.example.campushub.Calendar.CalendarFragmentMonth;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.time.LocalDate;
 
 public class MainActivity extends AppCompatActivity implements
         OrganizationSignUpFragment.IregisterFragmentAction,
@@ -15,10 +23,13 @@ public class MainActivity extends AppCompatActivity implements
         OrgProfileOwnerView.IOrgProfileOwnerActions,
         AddEditEventFragment.IAddEditEventActions,
         OwnerEventView.IOwnerEventDetailsActions{
+        NavigationFragment.INavigationActions,
+        CalendarFragmentMonth.ICalendarMonthActions{
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private boolean is_Orgprofile = false;
+    private View navigationBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         setTitle("CampusHub");
         mAuth = FirebaseAuth.getInstance();
+        navigationBar = findViewById(R.id.fragmentContainerViewNav);
+        navigationBar.setTransitionVisibility(View.GONE);
     }
 
     private void populateScreen() {
@@ -44,8 +57,8 @@ public class MainActivity extends AppCompatActivity implements
                         .replace(R.id.containerMain, HomeFragment.newInstance(),"homeFragment")
                         .addToBackStack("landingFragment")
                         .commit();
+                navigationBar.setVisibility(View.VISIBLE);
             }
-
 
         }else{
 //            The user is not logged in, load the login Fragment....
@@ -70,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.containerMain, LandingFragment.newInstance(), "landingFragment")
                     .commit();
+            navigationBar.setVisibility(View.GONE);
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
@@ -160,5 +174,48 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void deleteEventRedirect() {
         getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void homeClickedNav() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, HomeFragment.newInstance(),"homeFragment")
+                .addToBackStack("Prev")
+                .commit();
+    }
+
+    @Override
+    public void searchClickedNav() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, SearchFragment.newInstance(),"homeFragment")
+                .addToBackStack("Prev")
+                .commit();
+    }
+
+    @Override
+    public void calendarClickedNav() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, CalendarFragment.newInstance(),"homeFragment")
+                .addToBackStack("Prev")
+                .commit();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragmentContainerViewCalendar, CalendarFragmentMonth.newInstance(),"dayFragment")
+                .commit();
+    }
+
+    @Override
+    public void profileClickedNav() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, UserProfileOwnerView.newInstance(),"homeFragment")
+                .addToBackStack("Prev")
+                .commit();
+    }
+
+    @Override
+    public void dayClicked(LocalDate selectedDate) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainerViewCalendar, CalendarFragmentDay.newInstance(selectedDate),"dayFragment")
+                .addToBackStack("Month")
+                .commit();
     }
 }
