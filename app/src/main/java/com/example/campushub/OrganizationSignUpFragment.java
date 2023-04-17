@@ -120,6 +120,11 @@ public class OrganizationSignUpFragment extends Fragment implements View.OnClick
                 editTextTextPassword4.setError("Password must not be empty!");
             }
 
+            if (profileImageURL == null) {
+                Toast.makeText(getActivity(), "Organizations must set a profile image", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
 
             if (!orgname.equals("") && !email.equals("")
                     && !password.equals("")) {
