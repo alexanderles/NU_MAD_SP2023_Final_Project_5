@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_edit_event_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddEditEventFragment">
+
+    <TextView
+        android:id="@+id/add_edit_event_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/add_edit_event_title"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_event_name"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="@string/event_name_hint"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_edit_event_title" />
+
+    <EditText
+        android:id="@+id/edit_event_location"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/event_location_hint"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/edit_event_name"
+        app:layout_constraintStart_toStartOf="@+id/edit_event_name"
+        app:layout_constraintTop_toBottomOf="@+id/edit_event_name" />
+
+    <EditText
+        android:id="@+id/edit_event_description"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/event_description_hint"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/edit_event_location"
+        app:layout_constraintStart_toStartOf="@+id/edit_event_location"
+        app:layout_constraintTop_toBottomOf="@+id/edit_event_location" />
+
+    <EditText
+        android:id="@+id/edit_event_time"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/event_time_hint"
+        android:importantForAutofill="no"
+        android:inputType="time"
+        app:layout_constraintEnd_toEndOf="@+id/edit_event_description"
+        app:layout_constraintStart_toStartOf="@+id/edit_event_description"
+        app:layout_constraintTop_toBottomOf="@+id/edit_event_description" />
+
+    <CalendarView
+        android:id="@+id/edit_event_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minDate="04/01/2023"
+        app:layout_constraintBottom_toTopOf="@+id/send_event_changes_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_event_time" />
+
+    <Button
+        android:id="@+id/send_event_changes_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/campus_hub_color"
+        android:text="@string/create_event_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

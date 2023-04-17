@@ -32,7 +32,7 @@
         app:layout_constraintTop_toBottomOf="@+id/profile_title" />
 
     <TextView
-        android:id="@+id/textView_user_name"
+        android:id="@+id/org_name_owner_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -43,14 +43,14 @@
         app:layout_constraintTop_toTopOf="@+id/user_profile_image" />
 
     <TextView
-        android:id="@+id/textView_user_email"
+        android:id="@+id/org_email_owner_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/user_profile_image"
-        app:layout_constraintStart_toStartOf="@+id/textView_user_name"
-        app:layout_constraintTop_toBottomOf="@+id/textView_user_name" />
+        app:layout_constraintStart_toStartOf="@+id/org_name_owner_view"
+        app:layout_constraintTop_toBottomOf="@+id/org_name_owner_view" />
 
     <View
         android:id="@+id/org_event_div"
@@ -75,14 +75,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/org_event_div" />
 
+    <Button
+        android:id="@+id/button_calendar_view"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:backgroundTintMode="add"
+        android:fontFamily="@font/roboto"
+        android:text="@string/calendar_view"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:backgroundTint="@color/campus_hub_color"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_subtitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/profile_subtitle" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/organization_events_recyclerview"
         android:layout_width="409dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/button_div"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,20 +113,24 @@
         android:layout_height="1dp"
         android:layout_marginBottom="4dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/button_edit_profile"
+        app:layout_constraintBottom_toTopOf="@+id/button_add_event"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_edit_profile"
+        android:id="@+id/button_add_event"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTintMode="add"
+        android:fontFamily="@font/roboto"
         android:text="@string/add_event_text"
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="@color/black"
+        android:textStyle="bold"
+        app:backgroundTint="@color/white"
         app:icon="@drawable/add_event"
         app:iconGravity="end"
         app:iconTint="@color/campus_hub_color"
@@ -130,12 +153,14 @@
         style="@style/Widget.AppCompat.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
         android:foregroundTintMode="add"
         android:shadowColor="@color/campus_hub_color"
         android:text="@string/sign_out_text"
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="@color/black"
+        android:textStyle="bold"
         app:backgroundTint="@color/white"
         app:icon="@drawable/logout_icon"
         app:iconGravity="end"

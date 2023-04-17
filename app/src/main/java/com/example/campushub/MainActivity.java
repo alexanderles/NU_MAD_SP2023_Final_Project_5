@@ -20,6 +20,9 @@ public class MainActivity extends AppCompatActivity implements
         MemberSignUpFragment.ImemberRegisterFragmentAction,
         LandingFragment.IloginFragmentAction,
         EventsAdapter.IEventRowActions,
+        OrgProfileOwnerView.IOrgProfileOwnerActions,
+        AddEditEventFragment.IAddEditEventActions,
+        OwnerEventView.IOwnerEventDetailsActions{
         NavigationFragment.INavigationActions,
         CalendarFragmentMonth.ICalendarMonthActions{
 
@@ -126,7 +129,51 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void loadEventDetailsFragment(Event event) {
+        if (is_Orgprofile) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.containerMain, OwnerEventView.newInstance(event), "ownerEventViewFragment")
+                    .addToBackStack("owner_event_view")
+                    .commit();
+        }
+        else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.containerMain, UserEventView.newInstance(event), "userEventViewFragment")
+                    .addToBackStack("user_event_view")
+                    .commit();
+        }
+    }
 
+    @Override
+    public void orgProfileLogout() {
+        mAuth.signOut();
+        currentUser = null;
+        populateScreen();
+    }
+
+    @Override
+    public void addEvent() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, new AddEditEventFragment(), "eventAddFragment")
+                .addToBackStack("add_event")
+                .commit();
+    }
+
+    @Override
+    public void loadOrgProfile() {
+        getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void editEvent(Event event) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, AddEditEventFragment.newInstance(event), "eventEditFragment")
+                .addToBackStack("edit_event")
+                .commit();
+    }
+
+    @Override
+    public void deleteEventRedirect() {
+        getSupportFragmentManager().popBackStack();
     }
 
     @Override
