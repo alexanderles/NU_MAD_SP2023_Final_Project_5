@@ -1,6 +1,7 @@
 package com.example.campushub;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +25,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +40,9 @@ public class MemberSignUpFragment extends Fragment implements View.OnClickListen
     private Button button_memRegister;
     private String firstname, lastname, email, password;
     private ImemberRegisterFragmentAction mListener;
+    private FirebaseStorage storage;
+    private String profileImageURL = null;
+    private ImageView memProfilePhoto;
     public MemberSignUpFragment() {
         // Required empty public constructor
     }
@@ -51,6 +59,7 @@ public class MemberSignUpFragment extends Fragment implements View.OnClickListen
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     @Override
@@ -72,8 +81,16 @@ public class MemberSignUpFragment extends Fragment implements View.OnClickListen
         editText_lastname2 = rootView.findViewById(R.id.editText_lastname2);
         editTextTextEmailAddress2 = rootView.findViewById(R.id.editTextTextEmailAddress2);
         editTextTextPassword2 = rootView.findViewById(R.id.editTextTextPassword2);
+        memProfilePhoto = rootView.findViewById(R.id.memProfilePhoto);
         button_memRegister = rootView.findViewById(R.id.button_memRegister);
         button_memRegister.setOnClickListener(this);
+
+        memProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.memLoadTakePhotoFragment();
+            }
+        });
         return rootView;
     }
 
@@ -127,6 +144,9 @@ public class MemberSignUpFragment extends Fragment implements View.OnClickListen
                                                         userData.put("lastname", lastname);
                                                         userData.put("email", email);
                                                         //userData.put("password", password);
+                                                        if (profileImageURL != null) {
+                                                            userData.put("profileimage", profileImageURL);
+                                                        }
                                                         firestore.collection("Member_Users")
                                                                 .document(email)
                                                                 .set(userData)
@@ -158,7 +178,28 @@ public class MemberSignUpFragment extends Fragment implements View.OnClickListen
         }
     }
 
+    public void updateImage(String imagePath) {
+        StorageReference imageToLoad = storage.getReference().child(imagePath);
+        imageToLoad.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    profileImageURL = imagePath;
+                    Glide.with(getActivity())
+                            .load(task.getResult())
+                            .centerCrop()
+                            .into(memProfilePhoto);
+                }
+                else {
+                    Toast.makeText(getActivity(),
+                            "Unable to download image.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
     public interface ImemberRegisterFragmentAction {
         void memberRegisterDone(FirebaseUser mUser);
+        void memLoadTakePhotoFragment();
     }
 }

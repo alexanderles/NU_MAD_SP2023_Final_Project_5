@@ -1,6 +1,7 @@
 package com.example.campushub;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +25,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +41,9 @@ public class OrganizationSignUpFragment extends Fragment implements View.OnClick
     private Button button_register;
     private String orgname, email, password;
     private IregisterFragmentAction mListener;
+    private FirebaseStorage storage;
+    private String profileImageURL = null;
+    private ImageView orgProfilePhoto;
 
 
 
@@ -56,6 +64,7 @@ public class OrganizationSignUpFragment extends Fragment implements View.OnClick
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     @Override
@@ -79,8 +88,17 @@ public class OrganizationSignUpFragment extends Fragment implements View.OnClick
         editTextTextEmailAddress4 = rootView.findViewById(R.id.editTextTextEmailAddress4);
         editTextTextPassword4 = rootView.findViewById(R.id.editTextTextPassword4);
         button_register = rootView.findViewById(R.id.button_register);
+        orgProfilePhoto = rootView.findViewById(R.id.orgProfilePhoto);
         button_register.setOnClickListener(this);
+        orgProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.orgLoadTakePhotoFragment();
+            }
+        });
         return rootView;
+
+
     }
 
     @Override
@@ -100,6 +118,11 @@ public class OrganizationSignUpFragment extends Fragment implements View.OnClick
             }
             if (password.equals("")) {
                 editTextTextPassword4.setError("Password must not be empty!");
+            }
+
+            if (profileImageURL == null) {
+                Toast.makeText(getActivity(), "Organizations must set a profile image", Toast.LENGTH_SHORT).show();
+                return;
             }
 
 
@@ -127,6 +150,9 @@ public class OrganizationSignUpFragment extends Fragment implements View.OnClick
                                                         Map<String, Object> userData = new HashMap<>();
                                                         userData.put("Org_Name", orgname);
                                                         userData.put("email", email);
+                                                        if (profileImageURL != null) {
+                                                            userData.put("profileimage", profileImageURL);
+                                                        }
                                                         //userData.put("password", password);
                                                         firestore.collection("Org_Users")
                                                                 .document(email)
@@ -159,7 +185,28 @@ public class OrganizationSignUpFragment extends Fragment implements View.OnClick
         }
     }
 
+    public void updateImage(String imagePath) {
+        StorageReference imageToLoad = storage.getReference().child(imagePath);
+        imageToLoad.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    profileImageURL = imagePath;
+                    Glide.with(getActivity())
+                            .load(task.getResult())
+                            .centerCrop()
+                            .into(orgProfilePhoto);
+                }
+                else {
+                    Toast.makeText(getActivity(),
+                            "Unable to download image.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
     public interface IregisterFragmentAction {
         void registerDone(FirebaseUser mUser);
+        void orgLoadTakePhotoFragment();
     }
 }

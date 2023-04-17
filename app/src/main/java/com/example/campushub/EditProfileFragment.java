@@ -1,47 +1,68 @@
 package com.example.campushub;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EditProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+
 public class EditProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_FNAME = "fname";
+    private static final String ARG_LNAME = "lname";
+    private static final String ARG_PROFILEIMAGE = "profileImage";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String fname;
+    private String lname;
+    private String profileImagePath;
+    private String newProfileImagePath = null;
+
+    private ImageView imageView_camera;
+    private EditText edit_Firstname, edit_lastName;
+    private Button button_save_profile;
+
+    private FirebaseFirestore db;
+    private FirebaseStorage storage;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
+    private IeditProfileActions mListener;
+
 
     public EditProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EditProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EditProfileFragment newInstance(String param1, String param2) {
+
+    public static EditProfileFragment newInstance(String fname, String lname, String profileImagePath) {
         EditProfileFragment fragment = new EditProfileFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_FNAME, fname);
+        args.putString(ARG_LNAME, lname);
+        args.putString(ARG_PROFILEIMAGE, profileImagePath);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,15 +71,124 @@ public class EditProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            fname = getArguments().getString(ARG_FNAME);
+            lname = getArguments().getString(ARG_LNAME);
+            profileImagePath = getArguments().getString(ARG_PROFILEIMAGE);
         }
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+
+        imageView_camera = rootView.findViewById(R.id.imageView_camera);
+        edit_Firstname = rootView.findViewById(R.id.edit_Firstname);
+        edit_Firstname.setText(fname);
+        edit_lastName = rootView.findViewById(R.id.edit_lastName);
+        edit_lastName.setText(lname);
+        button_save_profile = rootView.findViewById(R.id.button_save_profile);
+        loadImage();
+
+        imageView_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.loadTakeNewProfilePhoto();
+            }
+        });
+
+        button_save_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final DocumentReference userInfo = db.collection("users").document(mUser.getEmail());
+
+                db.runTransaction(new Transaction.Function<Void>() {
+                    @Nullable
+                    @Override
+                    public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                        transaction.update(userInfo, "fname", edit_Firstname.getText().toString());
+                        transaction.update(userInfo, "lname", edit_lastName.getText().toString());
+                        if (newProfileImagePath != null) {
+                            transaction.update(userInfo, "profileimage", newProfileImagePath);
+                        }
+                        return null;
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            mListener.loadHome();
+                        }
+                        else {
+                            Toast.makeText(getActivity(),
+                                    "Unable to update profile.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        });
+
+        return rootView;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if (context instanceof IeditProfileActions) {
+            mListener = (IeditProfileActions) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement IeditProfileActions");
+        }
+    }
+
+    public void loadImage() {
+        StorageReference imageToLoad = storage.getReference().child(profileImagePath);
+        imageToLoad.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Glide.with(getActivity())
+                            .load(task.getResult())
+                            .centerCrop()
+                            .into(imageView_camera);
+                }
+                else {
+                    Toast.makeText(getActivity(),
+                            "Unable to download image.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public void updateImage(String imagePath) {
+        StorageReference imageToLoad = storage.getReference().child(imagePath);
+        imageToLoad.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    newProfileImagePath = imagePath;
+                    Glide.with(getActivity())
+                            .load(task.getResult())
+                            .centerCrop()
+                            .into(imageView_camera);
+                }
+                else {
+                    Toast.makeText(getActivity(),
+                            "Unable to download image.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public interface IeditProfileActions {
+        void loadTakeNewProfilePhoto();
+        void loadHome();
     }
 }

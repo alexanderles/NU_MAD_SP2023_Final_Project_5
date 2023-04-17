@@ -7,12 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".MemberSignUpFragment" >
 
+    <ImageView
+        android:id="@+id/memProfilePhoto"
+        android:layout_width="115dp"
+        android:layout_height="103dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/select_avatar"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword2"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword2"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword2"
+        tools:ignore="ImageContrastCheck" />
+
     <TextView
         android:id="@+id/memberSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
         android:text="@string/member_signup"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -23,7 +34,7 @@
         android:id="@+id/firstname_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:text="@string/firstname"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/memberSignUp"
@@ -35,7 +46,7 @@
         android:id="@+id/lastname_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         android:text="@string/lastname"
         android:textStyle="bold"
@@ -74,7 +85,7 @@
         android:id="@+id/email2_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="24dp"
         android:text="@string/email2_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/editText_lastname2"
@@ -99,7 +110,7 @@
         android:id="@+id/password_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="12dp"
         android:text="@string/password2"
         android:textStyle="bold"
@@ -125,9 +136,9 @@
         android:id="@+id/button_memRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:text="@string/Register2"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword2"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword2"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword2" />
+        app:layout_constraintEnd_toEndOf="@+id/memProfilePhoto"
+        app:layout_constraintStart_toStartOf="@+id/memProfilePhoto"
+        app:layout_constraintTop_toBottomOf="@+id/memProfilePhoto" />
 </androidx.constraintlayout.widget.ConstraintLayout>
