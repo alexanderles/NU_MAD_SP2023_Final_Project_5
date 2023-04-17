@@ -129,12 +129,15 @@ public class HomeFragment extends Fragment {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot snap = task.getResult();
+                                                    Object potentialOrgImage = snap.get("eventOrganizerImage");
+                                                    String eventOrgImage = (potentialOrgImage == null) ?
+                                                            null : potentialOrgImage.toString();
                                                     Event newEvent = new Event(
                                                             eventReference,
                                                             snap.get("eventName").toString(),
                                                             snap.get("eventOwnerName").toString(),
                                                             snap.get("eventOwnerEmail").toString(),
-                                                            snap.get("eventOrganizerImage").toString(),
+                                                            eventOrgImage,
                                                             snap.get("eventLocation").toString(),
                                                             snap.get("eventTime").toString(),
                                                             snap.get("eventDescription").toString()
@@ -151,6 +154,7 @@ public class HomeFragment extends Fragment {
                                             }
                                         });
                             }
+                            newEvents.sort(new EventComparator());
                             eventsAdapter.setEvents(newEvents);
                             eventsAdapter.notifyDataSetChanged();
                         }
@@ -181,12 +185,15 @@ public class HomeFragment extends Fragment {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot snap = task.getResult();
+                                                    Object potentialOrgImage = snap.get("eventOrganizerImage");
+                                                    String eventOrgImage = (potentialOrgImage == null) ?
+                                                            null : potentialOrgImage.toString();
                                                     Event newEvent = new Event(
                                                             eventReference,
                                                             snap.get("eventName").toString(),
                                                             snap.get("eventOwnerName").toString(),
                                                             snap.get("eventOwnerEmail").toString(),
-                                                            snap.get("eventOrganizerImage").toString(),
+                                                            eventOrgImage,
                                                             snap.get("eventLocation").toString(),
                                                             snap.get("eventTime").toString(),
                                                             snap.get("eventDescription").toString()
@@ -196,20 +203,21 @@ public class HomeFragment extends Fragment {
                                                     LocalDate dateTime = LocalDate.parse(
                                                             newEvent.getEventTime(),
                                                             dateFormatter);
-                                                    if (dateTime.compareTo(LocalDate.now()) > 0) {
+                                                    if (dateTime.compareTo(LocalDate.now()) >= 0) {
                                                         events.add(newEvent);
                                                     }
+                                                    updateRecyclerView(events);
                                                 }
                                             }
                                         });
                             }
-                            updateRecyclerView(events);
                         }
                     }
                 });
     }
 
     public void updateRecyclerView(ArrayList<Event> events){
+        events.sort(new EventComparator());
         eventsAdapter.setEvents(events);
         eventsAdapter.notifyDataSetChanged();
     }

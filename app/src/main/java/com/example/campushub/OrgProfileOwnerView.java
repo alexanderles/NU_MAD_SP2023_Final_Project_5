@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class OrgProfileOwnerView extends Fragment {
@@ -93,6 +99,12 @@ public class OrgProfileOwnerView extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -129,14 +141,18 @@ public class OrgProfileOwnerView extends Fragment {
                                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                DocumentSnapshot snap = task.getResult();
                                                 if (task.isSuccessful()) {
-                                                    DocumentSnapshot snap = task.getResult();
+                                                    Log.d("NULLERROR", snap.toString());
+                                                    Object potentialOrgImage = snap.get("eventOrganizerImage");
+                                                    String eventOrgImage = (potentialOrgImage == null) ?
+                                                            null : potentialOrgImage.toString();
                                                     Event newEvent = new Event(
                                                             eventReference,
                                                             snap.get("eventName").toString(),
                                                             snap.get("eventOwnerName").toString(),
                                                             snap.get("eventOwnerEmail").toString(),
-                                                            snap.get("eventOrganizerImage").toString(),
+                                                            eventOrgImage,
                                                             snap.get("eventLocation").toString(),
                                                             snap.get("eventTime").toString(),
                                                             snap.get("eventDescription").toString()
@@ -146,15 +162,16 @@ public class OrgProfileOwnerView extends Fragment {
                                                     LocalDate dateTime = LocalDate.parse(
                                                             newEvent.getEventTime(),
                                                             dateFormatter);
-                                                    if (dateTime.compareTo(LocalDate.now()) > 0) {
+                                                    if (dateTime.compareTo(LocalDate.now()) >= 0) {
                                                         newEvents.add(newEvent);
                                                     }
+                                                    newEvents.sort(new EventComparator());
+                                                    eventsAdapter.setEvents(newEvents);
+                                                    eventsAdapter.notifyDataSetChanged();
                                                 }
                                             }
                                         });
                             }
-                            eventsAdapter.setEvents(newEvents);
-                            eventsAdapter.notifyDataSetChanged();
                         }
                     }
                 });
@@ -186,6 +203,7 @@ public class OrgProfileOwnerView extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot snap = task.getResult();
+                            Log.d("ADAPTEREVENTS", snap.toString());
                             orgName.setText(snap.get("Org_Name").toString());
                             orgEmail.setText(snap.get("email").toString());
                             Object imageStorage = snap.get("Org_Image");
@@ -222,9 +240,11 @@ public class OrgProfileOwnerView extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        Log.d("ADAPTEREVENTS", "FIRES");
                         if (task.isSuccessful()) {
                             for(QueryDocumentSnapshot document : task.getResult()){
                                 String eventReference = document.get("eventId").toString();
+                                Log.d("ADAPTEREVENTS", eventReference);
                                 db.collection("events")
                                         .document(eventReference)
                                         .get()
@@ -232,13 +252,17 @@ public class OrgProfileOwnerView extends Fragment {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
+                                                    Log.d("ADAPTEREVENTS", "FIRES ON COMPLETE");
                                                     DocumentSnapshot snap = task.getResult();
+                                                    Object potentialOrgImage = snap.get("eventOrganizerImage");
+                                                    String eventOrgImage = (potentialOrgImage == null) ?
+                                                            null : potentialOrgImage.toString();
                                                     Event newEvent = new Event(
                                                             eventReference,
                                                             snap.get("eventName").toString(),
                                                             snap.get("eventOwnerName").toString(),
                                                             snap.get("eventOwnerEmail").toString(),
-                                                            snap.get("eventOrganizerImage").toString(),
+                                                            eventOrgImage,
                                                             snap.get("eventLocation").toString(),
                                                             snap.get("eventTime").toString(),
                                                             snap.get("eventDescription").toString()
@@ -248,21 +272,26 @@ public class OrgProfileOwnerView extends Fragment {
                                                     LocalDate dateTime = LocalDate.parse(
                                                             newEvent.getEventTime(),
                                                             dateFormatter);
-                                                    if (dateTime.compareTo(LocalDate.now()) > 0) {
+                                                    Log.d("ADAPTEREVENTS", dateTime.toString());
+                                                    if (dateTime.compareTo(LocalDate.now()) >= 0) {
+                                                        Log.d("ADAPTEREVENTS", "FIRES ON DATE");
                                                         events.add(newEvent);
                                                     }
+                                                    updateRecyclerView(events);
                                                 }
                                             }
                                         });
                             }
-                            updateRecyclerView(events);
+
                         }
                     }
                 });
     }
 
     public void updateRecyclerView(ArrayList<Event> events){
+        events.sort(new EventComparator());
         eventsAdapter.setEvents(events);
+        Log.d("ADAPTEREVENTS", events.toString());
         eventsAdapter.notifyDataSetChanged();
     }
 

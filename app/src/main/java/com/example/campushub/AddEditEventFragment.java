@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -98,6 +100,15 @@ public class AddEditEventFragment extends Fragment {
             sendEventUpdates.setText("Update");
         }
 
+        eventDate.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
+                Calendar c = Calendar.getInstance();
+                c.set(year, month, day);
+                eventDate.setDate(c.getTimeInMillis());
+            }
+        });
+
         sendEventUpdates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,7 +116,7 @@ public class AddEditEventFragment extends Fragment {
                     eventLocation.getText().toString().equals("") ||
                     eventTime.getText().toString().equals("") ||
                     eventDescription.getText().toString().equals("")) {
-                    Toast.makeText(getActivity(), "Fill in all fields", Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity(), "Fill in all fields", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (eventToEdit != null) {
@@ -144,18 +155,23 @@ public class AddEditEventFragment extends Fragment {
     private void loadEventInfo() {
         eventName.setText(eventToEdit.getEventName());
         eventLocation.setText(eventToEdit.getEventLocation());
-        String eventTimeString = eventToEdit.getEventTime().substring(11, 15);
+        String eventTimeString = eventToEdit.getEventTime().substring(11);
         eventTime.setText(eventTimeString);
         eventDescription.setText(eventToEdit.getEventDescription());
-        String eventDateString = eventToEdit.getEventTime().substring(0, 9);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-YYYY");
-        Date dateOfEvent = null;
+        String eventDateString = eventToEdit.getEventTime().substring(0, 10);
+        Log.d("DATECHANGE", "loadEventInfo: " + eventDateString);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        Calendar c = Calendar.getInstance();
+        Date newDate;
         try {
-            dateOfEvent = sdf.parse(eventDateString);
+            newDate = sdf.parse(eventDateString);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        eventDate.setDate(dateOfEvent.getTime());
+        c.setTime(newDate);
+        Log.d("DATECHANGE", "loadEventInfo: " + newDate);
+        Log.d("DATECHANGE", "loadEventInfo: " + c.getTimeInMillis());
+        eventDate.setDate(c.getTimeInMillis());
     }
 
     private void updateEvent() {
@@ -228,7 +244,7 @@ public class AddEditEventFragment extends Fragment {
                                             }
                                             else {
                                                 Toast.makeText(getActivity(),
-                                                        "Unable to add event.", Toast.LENGTH_LONG);
+                                                        "Unable to add event.", Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     });
