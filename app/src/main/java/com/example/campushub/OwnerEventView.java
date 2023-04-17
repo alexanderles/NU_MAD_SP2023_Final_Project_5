@@ -5,8 +5,10 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -137,6 +142,7 @@ public class OwnerEventView extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    Log.d("DELETE", "Delete is firing user cleanse");
                                     db.collection("Org_Users")
                                             .document(mUser.getEmail())
                                             .collection("events")
@@ -147,8 +153,10 @@ public class OwnerEventView extends Fragment {
                                                 @Override
                                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                     if (task.isSuccessful()) {
+                                                        Log.d("DELETE", "Delete has found something");
                                                         for (QueryDocumentSnapshot doc : task.getResult()) {
                                                             String eventRef = doc.getId();
+                                                            Log.d("DELETE", "toDeleteRef: " + eventRef);
                                                             db.collection("Org_Users")
                                                                     .document(mUser.getEmail())
                                                                     .collection("events")
@@ -180,6 +188,27 @@ public class OwnerEventView extends Fragment {
                         });
             }
         });
+
+        db.collection("events")
+                .document(eventDetails.getEventId())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (value != null && value.exists()) {
+                            eventDetails.setEventName(value.get("eventName").toString());
+                            eventDetails.setEventLocation(value.get("eventLocation").toString());
+                            eventDetails.setEventTime(value.get("eventTime").toString());
+                            eventDetails.setEventDescription(value.get("eventDescription").toString());
+
+                            eventName.setText(eventDetails.getEventName());
+                            organizerName.setText(eventDetails.getEventOwnerName());
+                            organizerEmail.setText(eventDetails.getEventOwnerEmail());
+                            eventTime.setText(eventDetails.getEventTime());
+                            eventLocation.setText(eventDetails.getEventLocation());
+                            eventDescription.setText(eventDetails.getEventDescription());
+                        }
+                    }
+                });
 
         return rootView;
     }

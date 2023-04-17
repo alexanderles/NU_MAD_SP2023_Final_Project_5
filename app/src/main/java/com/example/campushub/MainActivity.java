@@ -46,17 +46,16 @@ public class MainActivity extends AppCompatActivity implements
         DisplayPhotoFragment.RetakePhoto,
         HomeFragment.IhomeButtonActions,
         EditProfileFragment.IeditProfileActions,
-        
         EventsAdapter.IEventRowActions,
         OrgProfileOwnerView.IOrgProfileOwnerActions,
         AddEditEventFragment.IAddEditEventActions,
-        OwnerEventView.IOwnerEventDetailsActions{
+        OwnerEventView.IOwnerEventDetailsActions,
         NavigationFragment.INavigationActions,
         CalendarFragmentMonth.ICalendarMonthActions{
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-    private boolean is_Orgprofile = false;
+    private boolean isOrgProfile = false;
 
     private String galleryFragmentInfo = null;
 
@@ -95,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements
             // Load the org profile screen
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.containerMain, OrgProfileOwnerView.newInstance(), "orgViewFragment")
-                    .addToBackStack("landingFragment")
                     .commit();
         } else {
             // Load the home screen for member
@@ -103,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements
                     .replace(R.id.containerMain, HomeFragment.newInstance(), "homeFragment")
                     .addToBackStack("landingFragment")
                     .commit();
+            navigationBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -119,9 +118,11 @@ public class MainActivity extends AppCompatActivity implements
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 // User is a member
+                                isOrgProfile = false;
                                 loadCorrectFragment(false);
                             } else {
                                 // User is an organization
+                                isOrgProfile = true;
                                 loadCorrectFragment(true);
                             }
                         } else {
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void registerDone(FirebaseUser mUser) {
         this.currentUser = mUser;
-        is_Orgprofile = true;
+        isOrgProfile = true;
         populateScreen();
     }
 
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void memberRegisterDone(FirebaseUser mUser) {
         this.currentUser = mUser;
-        is_Orgprofile = false;
+        isOrgProfile = false;
         populateScreen();
     }
 
@@ -246,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void loadEventDetailsFragment(Event event) {
-        if (is_Orgprofile) {
+        if (isOrgProfile) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.containerMain, OwnerEventView.newInstance(event), "ownerEventViewFragment")
                     .addToBackStack("owner_event_view")
@@ -482,12 +483,5 @@ public class MainActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.containerMain, HomeFragment.newInstance(),"homeFragment")
                 .commit();
-    }
-
-    @Override
-    public void orgLogoutPressed() {
-        mAuth.signOut();
-        currentUser = null;
-        populateScreen();
     }
 }
