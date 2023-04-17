@@ -110,7 +110,7 @@ public class HomeFragment extends Fragment {
         });
 
 
-        db.collection("users")
+        db.collection("Member_Users")
                 .document(mUser.getEmail())
                 .collection("events")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -163,7 +163,7 @@ public class HomeFragment extends Fragment {
     private void loadData() {
         ArrayList<Event> events = new ArrayList<>();
 
-        db.collection("users")
+        db.collection("Member_Users")
                 .document(mUser.getEmail())
                 .collection("events")
                 .get()

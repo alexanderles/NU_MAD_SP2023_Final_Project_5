@@ -1,47 +1,61 @@
 package com.example.campushub;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link OwnerEventView#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+
 public class OwnerEventView extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_EVENT = "event";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Event eventDetails;
+    private IOwnerEventDetailsActions mListener;
+
+    private TextView eventName, organizerName, organizerEmail,
+        eventTime, eventLocation, eventDescription;
+    private String orgImagePath;
+    private ImageView organizerImage;
+    private Button editEvent, deleteEvent;
+
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private FirebaseStorage storage;
 
     public OwnerEventView() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment OwnerEventView.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static OwnerEventView newInstance(String param1, String param2) {
+    public static OwnerEventView newInstance(Event event) {
         OwnerEventView fragment = new OwnerEventView();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_EVENT, event);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,16 +63,139 @@ public class OwnerEventView extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        Bundle args = getArguments();
+        if (args != null) {
+            if (args.containsKey(ARG_EVENT)) {
+                eventDetails = (Event) args.getSerializable(ARG_EVENT);
+            }
         }
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        storage = FirebaseStorage.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_owner_event_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_owner_event_view, container, false);
+
+        eventName = rootView.findViewById(R.id.event_details_title_owner);
+        organizerName = rootView.findViewById(R.id.event_details_organizer_owner);
+        organizerEmail = rootView.findViewById(R.id.event_details_organizer_email_owner);
+        eventTime = rootView.findViewById(R.id.event_details_date_owner);
+        eventLocation = rootView.findViewById(R.id.event_details_location_owner);
+        eventDescription = rootView.findViewById(R.id.event_details_description_owner);
+        organizerImage = rootView.findViewById(R.id.event_details_image_owner);
+
+        editEvent = rootView.findViewById(R.id.button_user_event_edit_owner);
+        deleteEvent = rootView.findViewById(R.id.button_user_event_delete_owner);
+
+        eventName.setText(eventDetails.getEventName());
+        organizerName.setText(eventDetails.getEventOwnerName());
+        organizerEmail.setText(eventDetails.getEventOwnerEmail());
+        eventTime.setText(eventDetails.getEventTime());
+        eventLocation.setText(eventDetails.getEventLocation());
+        eventDescription.setText(eventDetails.getEventDescription());
+
+        if (eventDetails.getEventOrganizerImage() != null) {
+            orgImagePath = eventDetails.getEventOrganizerImage();
+            StorageReference imageToLoad = storage.getReference().child(orgImagePath);
+            imageToLoad.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful() && isAdded()) {
+                        Glide.with(getActivity())
+                                .load(task.getResult())
+                                .centerCrop()
+                                .into(organizerImage);
+                    }
+                    else if (isAdded()) {
+                        Toast.makeText(getActivity(),
+                                "Unable to download image.", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+
+        editEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.editEvent(eventDetails);
+            }
+        });
+
+        deleteEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.collection("events")
+                        .document(eventDetails.getEventId())
+                        .delete()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    db.collection("Org_Users")
+                                            .document(mUser.getEmail())
+                                            .collection("events")
+                                            .whereEqualTo("eventId", eventDetails.getEventId())
+                                            .limit(1)
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                                                            String eventRef = doc.getId();
+                                                            db.collection("Org_Users")
+                                                                    .document(mUser.getEmail())
+                                                                    .collection("events")
+                                                                    .document(eventRef)
+                                                                    .delete()
+                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void unused) {
+                                                                            mListener.deleteEventRedirect();
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Toast.makeText(getActivity(),
+                                                                                    "Unable to download image.", Toast.LENGTH_LONG).show();
+                                                                        }
+                                                                    });
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                }
+                                else {
+                                    Toast.makeText(getActivity(),
+                                            "Unable to delete event.", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+            }
+        });
+
+        return rootView;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof IOwnerEventDetailsActions){
+            this.mListener = (IOwnerEventDetailsActions) context;
+        }else{
+            throw new RuntimeException(context.toString()+ "must implement IOwnerEventDetailsActions");
+        }
+    }
+
+    public interface IOwnerEventDetailsActions {
+        void editEvent(Event event);
+        void deleteEventRedirect();
     }
 }

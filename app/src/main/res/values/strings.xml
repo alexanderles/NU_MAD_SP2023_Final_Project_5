@@ -39,6 +39,15 @@
     <string name="orgname">Organization Name</string>
     <string name="save_text">Save</string>
     <string name="profile_photo_text">Profile Photo</string>
+    <string name="name_month_placeholder">Month</string>
+    <string name="name_sun">SUN</string>
+    <string name="name_mon">MON</string>
+    <string name="name_tues">TUES</string>
+    <string name="name_wed">WED</string>
+    <string name="name_thur">THUR</string>
+    <string name="name_fri">FRI</string>
+    <string name="name_sat">SAT</string>
+    <string name="name_day_placeholder">1</string>
     <string name="firstname">First Name</string>
     <string name="firstname2">First Name</string>
     <string name="lastname">Last Name</string>
@@ -60,4 +69,12 @@
     <string name="lastName">Last Name</string>
     <string name="editEmail">Email</string>
     <string name="sc">cs</string>
+    <string name="calendar_view">Calendar View</string>
+    <string name="add_edit_event_title">Add or Edit an Event</string>
+    <string name="event_time_hint">Event time...</string>
+    <string name="event_name_hint">Event name...</string>
+    <string name="event_location_hint">Event location...</string>
+    <string name="event_description_hint">Event description...</string>
+    <string name="create_event_text">Create</string>
+    <string name="name_month_day_placeholder">Day</string>
 </resources>

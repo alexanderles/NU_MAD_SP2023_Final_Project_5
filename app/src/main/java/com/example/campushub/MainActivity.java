@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.Intent;
@@ -20,6 +21,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import android.util.Log;
+import android.view.View;
+
+import com.example.campushub.Calendar.CalendarFragment;
+import com.example.campushub.Calendar.CalendarFragmentDay;
+import com.example.campushub.Calendar.CalendarFragmentMonth;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,21 +36,34 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.time.LocalDate;
+
 public class MainActivity extends AppCompatActivity implements
         OrganizationSignUpFragment.IregisterFragmentAction,
         MemberSignUpFragment.ImemberRegisterFragmentAction,
         LandingFragment.IloginFragmentAction,
-        EventsAdapter.IEventRowActions, CameraControlFragment.DisplayTakenPhoto,
-        DisplayPhotoFragment.RetakePhoto, HomeFragment.IhomeButtonActions,
-        EditProfileFragment.IeditProfileActions, OrgProfileOwnerView.IorgViewButtonActions {
+        CameraControlFragment.DisplayTakenPhoto,
+        DisplayPhotoFragment.RetakePhoto,
+        HomeFragment.IhomeButtonActions,
+        EditProfileFragment.IeditProfileActions,
+        
+        EventsAdapter.IEventRowActions,
+        OrgProfileOwnerView.IOrgProfileOwnerActions,
+        AddEditEventFragment.IAddEditEventActions,
+        OwnerEventView.IOwnerEventDetailsActions{
+        NavigationFragment.INavigationActions,
+        CalendarFragmentMonth.ICalendarMonthActions{
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private boolean is_Orgprofile = false;
+
     private String galleryFragmentInfo = null;
 
     private static final int PERMISSIONS_CODE = 0x100;
     private FirebaseStorage storage;
+
+    private View navigationBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, PERMISSIONS_CODE);
         }
+        navigationBar = findViewById(R.id.fragmentContainerViewNav);
+        navigationBar.setTransitionVisibility(View.GONE);
     }
 
     private void loadCorrectFragment(boolean isOrgUser) {
@@ -133,8 +155,8 @@ public class MainActivity extends AppCompatActivity implements
                         .replace(R.id.containerMain, HomeFragment.newInstance(),"homeFragment")
                         .addToBackStack("landingFragment")
                         .commit();
+                navigationBar.setVisibility(View.VISIBLE);
             }
-
 
         }else{
 //            The user is not logged in, load the login Fragment....
@@ -160,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.containerMain, LandingFragment.newInstance(), "landingFragment")
                     .commit();
+            navigationBar.setVisibility(View.GONE);
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
@@ -223,7 +246,94 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void loadEventDetailsFragment(Event event) {
+        if (is_Orgprofile) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.containerMain, OwnerEventView.newInstance(event), "ownerEventViewFragment")
+                    .addToBackStack("owner_event_view")
+                    .commit();
+        }
+        else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.containerMain, UserEventView.newInstance(event), "userEventViewFragment")
+                    .addToBackStack("user_event_view")
+                    .commit();
+        }
+    }
 
+    @Override
+    public void orgProfileLogout() {
+        mAuth.signOut();
+        currentUser = null;
+        populateScreen();
+    }
+
+    @Override
+    public void addEvent() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, new AddEditEventFragment(), "eventAddFragment")
+                .addToBackStack("add_event")
+                .commit();
+    }
+
+    @Override
+    public void loadOrgProfile() {
+        getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void editEvent(Event event) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, AddEditEventFragment.newInstance(event), "eventEditFragment")
+                .addToBackStack("edit_event")
+                .commit();
+    }
+
+    @Override
+    public void deleteEventRedirect() {
+        getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void homeClickedNav() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, HomeFragment.newInstance(),"homeFragment")
+                .addToBackStack("Prev")
+                .commit();
+    }
+
+    @Override
+    public void searchClickedNav() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, SearchFragment.newInstance(),"homeFragment")
+                .addToBackStack("Prev")
+                .commit();
+    }
+
+    @Override
+    public void calendarClickedNav() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, CalendarFragment.newInstance(),"homeFragment")
+                .addToBackStack("Prev")
+                .commit();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragmentContainerViewCalendar, CalendarFragmentMonth.newInstance(),"dayFragment")
+                .commit();
+    }
+
+    @Override
+    public void profileClickedNav() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, UserProfileOwnerView.newInstance(),"homeFragment")
+                .addToBackStack("Prev")
+                .commit();
+    }
+
+    @Override
+    public void dayClicked(LocalDate selectedDate) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainerViewCalendar, CalendarFragmentDay.newInstance(selectedDate),"dayFragment")
+                .addToBackStack("Month")
+                .commit();
     }
 
     @Override

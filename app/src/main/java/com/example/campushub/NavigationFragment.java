@@ -1,12 +1,15 @@
 package com.example.campushub;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,14 +18,11 @@ import android.view.ViewGroup;
  */
 public class NavigationFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ImageView home;
+    private ImageView search;
+    private ImageView calendar;
+    private ImageView profile;
+    private INavigationActions navigationListener;
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -32,16 +32,11 @@ public class NavigationFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment NavigationFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static NavigationFragment newInstance(String param1, String param2) {
+    public static NavigationFragment newInstance() {
         NavigationFragment fragment = new NavigationFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,8 +45,6 @@ public class NavigationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -59,6 +52,59 @@ public class NavigationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_navigation, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_navigation, container, false);
+
+        home = rootView.findViewById(R.id.imageView_home_nav);
+        search = rootView.findViewById(R.id.imageView_search_nav);
+        calendar = rootView.findViewById(R.id.imageView_calendar_nav);
+        profile = rootView.findViewById(R.id.imageView_profile_nav);
+
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigationListener.homeClickedNav();
+            }
+        });
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigationListener.searchClickedNav();
+            }
+        });
+
+        calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigationListener.calendarClickedNav();
+            }
+        });
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigationListener.profileClickedNav();
+            }
+        });
+
+        return rootView;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if (context instanceof NavigationFragment.INavigationActions) {
+            navigationListener = (INavigationActions) context;
+        } else {
+            throw new RuntimeException(context + " must implement INavigationActions");
+        }
+    }
+
+    public interface INavigationActions {
+        void homeClickedNav();
+        void searchClickedNav();
+        void calendarClickedNav();
+        void profileClickedNav();
     }
 }
