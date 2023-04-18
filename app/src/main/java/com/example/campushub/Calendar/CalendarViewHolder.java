@@ -11,9 +11,9 @@ import com.example.campushub.R;
 
 public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 {
-    public final TextView dayOfMonth;
-    public final ImageView todayCircle;
-    public final ImageView eventDot;
+    private final TextView dayOfMonth;
+    private final ImageView todayCircle;
+    private final ImageView eventDot;
     private final CalendarAdapter.OnCalendarItemListener onCalendarItemListener;
     public CalendarViewHolder(@NonNull View itemView, CalendarAdapter.OnCalendarItemListener onCalendarItemListener)
     {
@@ -23,6 +23,22 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.
         eventDot = itemView.findViewById(R.id.imageView_event_dot);
         this.onCalendarItemListener = onCalendarItemListener;
         itemView.setOnClickListener(this);
+    }
+
+    public TextView getDayOfMonth() {
+        return dayOfMonth;
+    }
+
+    public ImageView getTodayCircle() {
+        return todayCircle;
+    }
+
+    public ImageView getEventDot() {
+        return eventDot;
+    }
+
+    public CalendarAdapter.OnCalendarItemListener getOnCalendarItemListener() {
+        return onCalendarItemListener;
     }
 
     @Override

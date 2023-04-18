@@ -54,4 +54,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_month_day" />
+
+    <TextView
+        android:id="@+id/textView_no_events"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        android:text="@string/no_events_text"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dayEventsRecyclerView"
+        app:layout_constraintEnd_toEndOf="@+id/dayEventsRecyclerView"
+        app:layout_constraintStart_toStartOf="@+id/dayEventsRecyclerView"
+        app:layout_constraintTop_toTopOf="@+id/textView_month_day" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,7 +25,6 @@ public class UserProfileOwnerView extends Fragment {
      *
      * @return A new instance of fragment UserProfileOwnerView.
      */
-    // TODO: Rename and change types and number of parameters
     public static UserProfileOwnerView newInstance() {
         UserProfileOwnerView fragment = new UserProfileOwnerView();
         Bundle args = new Bundle();

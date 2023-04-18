@@ -77,4 +77,5 @@
     <string name="event_description_hint">Event description...</string>
     <string name="create_event_text">Create</string>
     <string name="name_month_day_placeholder">Day</string>
+    <string name="no_events_text">No Events Scheduled</string>
 </resources>
