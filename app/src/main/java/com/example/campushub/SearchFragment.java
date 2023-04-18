@@ -110,7 +110,7 @@ public class SearchFragment extends Fragment {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot snap : task.getResult()) {
                                                 String orgName = snap.get("Org_Name").toString();
-                                                if (orgName.matches("(?i).*\\b" + searchExp + "\\b.*")) {
+                                                if (orgName.matches("(?i).*" + searchExp + ".*")) {
                                                     Object potentialOrgImage = snap.get("profileImage");
                                                     String orgProfileImage = (potentialOrgImage == null) ?
                                                             null : potentialOrgImage.toString();
@@ -144,7 +144,7 @@ public class SearchFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot snap : task.getResult()) {
                                 String orgName = snap.get("Org_Name").toString();
-                                if (orgName.matches("(?i).*\\b" + searchExp + "\\b.*")) {
+                                if (orgName.matches("(?i).*" + searchExp + ".*")) {
                                     Object potentialOrgImage = snap.get("profileImage");
                                     String orgProfileImage = (potentialOrgImage == null) ?
                                             null : potentialOrgImage.toString();
