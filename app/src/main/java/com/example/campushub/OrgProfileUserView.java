@@ -2,19 +2,18 @@ package com.example.campushub;
 
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -67,6 +66,12 @@ public class OrgProfileUserView extends Fragment {
         args.putString(ARG_ORG, organizerEmail);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
     }
 
     @Override
@@ -123,12 +128,15 @@ public class OrgProfileUserView extends Fragment {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot snap = task.getResult();
+                                                    Object potentialOrgImage = snap.get("eventOrganizerImage");
+                                                    String orgProfileImage = (potentialOrgImage == null) ?
+                                                            null : potentialOrgImage.toString();
                                                     Event newEvent = new Event(
                                                             eventReference,
                                                             snap.get("eventName").toString(),
                                                             snap.get("eventOwnerName").toString(),
                                                             snap.get("eventOwnerEmail").toString(),
-                                                            snap.get("eventOrganizerImage").toString(),
+                                                            orgProfileImage,
                                                             snap.get("eventLocation").toString(),
                                                             snap.get("eventTime").toString(),
                                                             snap.get("eventDescription").toString()
@@ -138,15 +146,17 @@ public class OrgProfileUserView extends Fragment {
                                                     LocalDate dateTime = LocalDate.parse(
                                                             newEvent.getEventTime(),
                                                             dateFormatter);
-                                                    if (dateTime.compareTo(LocalDate.now()) > 0) {
+                                                    if (dateTime.compareTo(LocalDate.now()) >= 0) {
                                                         newEvents.add(newEvent);
                                                     }
+                                                    newEvents.sort(new EventComparator());
+                                                    eventsAdapter.setEvents(newEvents);
+                                                    eventsAdapter.notifyDataSetChanged();
                                                 }
                                             }
                                         });
                             }
-                            eventsAdapter.setEvents(newEvents);
-                            eventsAdapter.notifyDataSetChanged();
+
                         }
                     }
                 });
@@ -166,7 +176,7 @@ public class OrgProfileUserView extends Fragment {
                             DocumentSnapshot snap = task.getResult();
                             orgName.setText(snap.get("Org_Name").toString());
                             orgEmail.setText(snap.get("email").toString());
-                            Object imageStorage = snap.get("Org_Image");
+                            Object imageStorage = snap.get("profileImage");
                             if (imageStorage != null) {
                                 orgProfileImage = imageStorage.toString();
                                 StorageReference imageToLoad = storage.getReference().child(orgProfileImage);
@@ -211,12 +221,15 @@ public class OrgProfileUserView extends Fragment {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot snap = task.getResult();
+                                                    Object potentialOrgImage = snap.get("eventOrganizerImage");
+                                                    String orgProfileImage = (potentialOrgImage == null) ?
+                                                            null : potentialOrgImage.toString();
                                                     Event newEvent = new Event(
                                                             eventReference,
                                                             snap.get("eventName").toString(),
                                                             snap.get("eventOwnerName").toString(),
                                                             snap.get("eventOwnerEmail").toString(),
-                                                            snap.get("eventOrganizerImage").toString(),
+                                                            orgProfileImage,
                                                             snap.get("eventLocation").toString(),
                                                             snap.get("eventTime").toString(),
                                                             snap.get("eventDescription").toString()
@@ -226,20 +239,21 @@ public class OrgProfileUserView extends Fragment {
                                                     LocalDate dateTime = LocalDate.parse(
                                                             newEvent.getEventTime(),
                                                             dateFormatter);
-                                                    if (dateTime.compareTo(LocalDate.now()) > 0) {
+                                                    if (dateTime.compareTo(LocalDate.now()) >= 0) {
                                                         events.add(newEvent);
                                                     }
+                                                    updateRecyclerView(events);
                                                 }
                                             }
                                         });
                             }
-                            updateRecyclerView(events);
                         }
                     }
                 });
     }
 
     public void updateRecyclerView(ArrayList<Event> events){
+        events.sort(new EventComparator());
         eventsAdapter.setEvents(events);
         eventsAdapter.notifyDataSetChanged();
     }
