@@ -1,5 +1,5 @@
 package com.example.campushub.Calendar;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import com.example.campushub.Event;
 import com.example.campushub.R;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 
 class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
