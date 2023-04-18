@@ -1,5 +1,14 @@
 package com.example.campushub;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -9,24 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import android.util.Log;
-import android.view.View;
-
 import com.example.campushub.Calendar.CalendarFragment;
 import com.example.campushub.Calendar.CalendarFragmentDay;
 import com.example.campushub.Calendar.CalendarFragmentMonth;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,7 +32,15 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalDate;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class MainActivity extends AppCompatActivity implements
         OrganizationSignUpFragment.IregisterFragmentAction,
@@ -86,6 +90,12 @@ public class MainActivity extends AppCompatActivity implements
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, PERMISSIONS_CODE);
         }
+
+        if (!isInternetAvailable()) {
+            Toast.makeText(MainActivity.this,
+                    "Internet not available. Please connect to use this app.",
+                    Toast.LENGTH_LONG);
+        }
         navigationBar = findViewById(R.id.fragmentContainerViewNav);
         navigationBar.setTransitionVisibility(View.GONE);
     }
@@ -100,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements
             // Load the home screen for member
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.containerMain, HomeFragment.newInstance(), "homeFragment")
-                    .addToBackStack("landingFragment")
                     .commit();
             navigationBar.setVisibility(View.VISIBLE);
         }
@@ -146,20 +155,19 @@ public class MainActivity extends AppCompatActivity implements
     }
     @Override
     public void onBackPressed() {
-        /*HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("homeFragment");
-
-        if (homeFragment != null && homeFragment.isVisible()) {
-            // If the HomeFragment is currently visible, replace it with the LandingFragment
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.containerMain, LandingFragment.newInstance(), "landingFragment")
-                    .commit();
-            navigationBar.setVisibility(View.GONE);
-        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        Fragment dayFound = getSupportFragmentManager().findFragmentByTag("dayFragment");
+        if (dayFound != null && !dayFound.isVisible()) {
+            CalendarFragmentDay newDay = (CalendarFragmentDay) dayFound;
             getSupportFragmentManager().popBackStack();
-        } else {
+            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerViewCalendar, CalendarFragmentDay.newInstance(newDay.getSelectedDate()),"dayFragment")
+                    .addToBackStack("day_fragment")
+                    .commit();
+        }
+        else {
             super.onBackPressed();
-        }*/
-        super.onBackPressed();
+        }
     }
 
 
@@ -236,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements
     public void orgProfileLogout() {
         mAuth.signOut();
         currentUser = null;
+        navigationBar.setVisibility(View.GONE);
         populateScreen();
     }
 
@@ -265,38 +274,46 @@ public class MainActivity extends AppCompatActivity implements
         getSupportFragmentManager().popBackStack();
     }
 
+    private void clearBackStack() {
+        int backstackCount = getSupportFragmentManager().getBackStackEntryCount();
+        for (int i = 0; i < backstackCount; i++) {
+            getSupportFragmentManager().popBackStack();
+        }
+    }
+
     @Override
     public void homeClickedNav() {
+        clearBackStack();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.containerMain, HomeFragment.newInstance(),"homeFragment")
-                .addToBackStack("Prev")
                 .commit();
     }
 
     @Override
     public void searchClickedNav() {
+        clearBackStack();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.containerMain, SearchFragment.newInstance(),"homeFragment")
-                .addToBackStack("Prev")
+                .addToBackStack("search")
                 .commit();
     }
 
     @Override
     public void calendarClickedNav() {
+        clearBackStack();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerMain, CalendarFragment.newInstance(),"homeFragment")
-                .addToBackStack("Prev")
-                .commit();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragmentContainerViewCalendar, CalendarFragmentMonth.newInstance(),"dayFragment")
+                .replace(R.id.containerMain, CalendarFragment.newInstance(),"calendarFragment")
+                .replace(R.id.fragmentContainerViewCalendar, CalendarFragmentMonth.newInstance(),"monthFragment")
+                .addToBackStack("calendar")
                 .commit();
     }
 
     @Override
     public void profileClickedNav() {
+        clearBackStack();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.containerMain, UserProfileOwnerView.newInstance(),"homeFragment")
-                .addToBackStack("Prev")
+                .addToBackStack("profile")
                 .commit();
     }
 
@@ -304,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements
     public void dayClicked(LocalDate selectedDate) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainerViewCalendar, CalendarFragmentDay.newInstance(selectedDate),"dayFragment")
-                .addToBackStack("Month")
+                .addToBackStack("day_fragment")
                 .commit();
     }
 
@@ -430,6 +447,7 @@ public class MainActivity extends AppCompatActivity implements
     public void logoutPressed() {
         mAuth.signOut();
         currentUser = null;
+        navigationBar.setVisibility(View.GONE);
         populateScreen();
     }
 
@@ -464,5 +482,29 @@ public class MainActivity extends AppCompatActivity implements
                         "orgProfileUserViewFragment")
                 .addToBackStack("org_profile_member_view")
                 .commit();
+    }
+
+    /**
+     * Checks for internet connection
+     */
+    private boolean isInternetAvailable() {
+        InetAddress inetAddress = null;
+        try {
+            Future<InetAddress> future = Executors.newSingleThreadExecutor()
+                    .submit(new Callable<InetAddress>() {
+                        @Override
+                        public InetAddress call() throws Exception {
+                            try {
+                                return InetAddress.getByName("www.google.com");
+                            } catch (UnknownHostException e) {
+                                return null;
+                            }
+                        }
+                    });
+            inetAddress = future.get(1000, TimeUnit.MILLISECONDS);
+            future.cancel(true);
+        } catch (ExecutionException | TimeoutException | InterruptedException e) {
+        }
+        return inetAddress != null;
     }
 }

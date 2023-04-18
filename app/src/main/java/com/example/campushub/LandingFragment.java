@@ -21,6 +21,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 public class LandingFragment extends Fragment implements View.OnClickListener {
 
     private EditText editTextLoginEmail, editTextLoginPassword;
@@ -76,6 +85,12 @@ public class LandingFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        if (!isInternetAvailable()) {
+            Toast.makeText(getActivity(),
+                    "Internet not available. Please connect to use this app.",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
         if(view.getId() == R.id.button_login){
             email = editTextLoginEmail.getText().toString().trim();
             password = editTextLoginPassword.getText().toString().trim();
@@ -117,6 +132,30 @@ public class LandingFragment extends Fragment implements View.OnClickListener {
             mListener.populateClubRegisterFragment();
         }
 
+    }
+
+    /**
+     * Checks for internet connection
+     */
+    private boolean isInternetAvailable() {
+        InetAddress inetAddress = null;
+        try {
+            Future<InetAddress> future = Executors.newSingleThreadExecutor()
+                    .submit(new Callable<InetAddress>() {
+                        @Override
+                        public InetAddress call() throws Exception {
+                            try {
+                                return InetAddress.getByName("www.google.com");
+                            } catch (UnknownHostException e) {
+                                return null;
+                            }
+                        }
+                    });
+            inetAddress = future.get(1000, TimeUnit.MILLISECONDS);
+            future.cancel(true);
+        } catch (ExecutionException | TimeoutException | InterruptedException e) {
+        }
+        return inetAddress != null;
     }
 
     public interface IloginFragmentAction {

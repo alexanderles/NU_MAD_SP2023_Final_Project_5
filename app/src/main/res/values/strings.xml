@@ -71,7 +71,7 @@
     <string name="sc">cs</string>
     <string name="calendar_view">Calendar View</string>
     <string name="add_edit_event_title">Add or Edit an Event</string>
-    <string name="event_time_hint">Event time...</string>
+    <string name="event_time_hint">Event time in 24hr format...</string>
     <string name="event_name_hint">Event name...</string>
     <string name="event_location_hint">Event location...</string>
     <string name="event_description_hint">Event description...</string>
