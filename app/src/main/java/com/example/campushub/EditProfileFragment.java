@@ -94,7 +94,9 @@ public class EditProfileFragment extends Fragment {
         edit_lastName = rootView.findViewById(R.id.edit_lastName);
         edit_lastName.setText(lname);
         button_save_profile = rootView.findViewById(R.id.button_save_profile);
-        loadImage();
+        if (profileImagePath != null) {
+            loadImage();
+        }
 
         imageView_camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,16 +108,16 @@ public class EditProfileFragment extends Fragment {
         button_save_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DocumentReference userInfo = db.collection("users").document(mUser.getEmail());
+                final DocumentReference userInfo = db.collection("Member_Users").document(mUser.getEmail());
 
                 db.runTransaction(new Transaction.Function<Void>() {
                     @Nullable
                     @Override
                     public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                        transaction.update(userInfo, "fname", edit_Firstname.getText().toString());
-                        transaction.update(userInfo, "lname", edit_lastName.getText().toString());
+                        transaction.update(userInfo, "firstname", edit_Firstname.getText().toString());
+                        transaction.update(userInfo, "lastname", edit_lastName.getText().toString());
                         if (newProfileImagePath != null) {
-                            transaction.update(userInfo, "profileimage", newProfileImagePath);
+                            transaction.update(userInfo, "profileImage", newProfileImagePath);
                         }
                         return null;
                     }
@@ -123,7 +125,7 @@ public class EditProfileFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            mListener.loadHome();
+                            mListener.saveProfileChangesClicked();
                         }
                         else {
                             Toast.makeText(getActivity(),
@@ -189,6 +191,6 @@ public class EditProfileFragment extends Fragment {
 
     public interface IeditProfileActions {
         void loadTakeNewProfilePhoto();
-        void loadHome();
+        void saveProfileChangesClicked();
     }
 }

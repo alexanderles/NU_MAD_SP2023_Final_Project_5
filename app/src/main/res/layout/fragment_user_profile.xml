@@ -6,16 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTintMode="add"
-    tools:context=".UserProfileOwnerView">
-
-    <TextView
-        android:id="@+id/textView_user_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/org_name_user_view"
-        app:layout_constraintTop_toBottomOf="@+id/org_email_user_view" />
+    tools:context=".UserProfileFragment">
 
     <TextView
         android:id="@+id/profile_title"
@@ -41,7 +32,7 @@
         app:layout_constraintTop_toBottomOf="@+id/profile_title" />
 
     <TextView
-        android:id="@+id/org_name_user_view"
+        android:id="@+id/textView_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -52,13 +43,13 @@
         app:layout_constraintTop_toTopOf="@+id/user_profile_image" />
 
     <TextView
-        android:id="@+id/org_email_user_view"
+        android:id="@+id/textView_user_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/org_name_user_view"
-        app:layout_constraintTop_toBottomOf="@+id/org_name_user_view" />
+        app:layout_constraintStart_toStartOf="@+id/textView_user_name"
+        app:layout_constraintTop_toBottomOf="@+id/textView_user_name" />
 
     <View
         android:id="@+id/org_event_div"
@@ -104,7 +95,7 @@
         android:layout_height="1dp"
         android:layout_marginBottom="4dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/button_add_event"
+        app:layout_constraintBottom_toTopOf="@+id/button_edit_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -119,7 +110,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_add_event"
+        android:id="@+id/button_edit_profile"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -129,7 +120,7 @@
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="12sp"
-        app:icon="@drawable/add_event"
+        app:icon="@drawable/ic_edit"
         app:iconGravity="end"
         app:iconTint="@color/campus_hub_color"
         app:layout_constraintEnd_toEndOf="parent"
@@ -144,7 +135,7 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_add_event" />
+        app:layout_constraintTop_toBottomOf="@+id/button_edit_profile" />
 
     <Button
         android:id="@+id/button_change_password"

@@ -40,17 +40,13 @@ public class HomeFragment extends Fragment {
     private static final String ARG_EVENT = "events";
 
     private ArrayList<Event> mEvents;
-    private IhomeButtonActions mListener;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private String fname, lname, profileImagePath;
 
     private RecyclerView recyclerView;
     private EventsAdapter eventsAdapter;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
-    private Button button_edit_profile2;
-    private Button button_signout;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -71,7 +67,6 @@ public class HomeFragment extends Fragment {
         if (args != null) {
             if (args.containsKey(ARG_EVENT)) {
                 mEvents = (ArrayList<Event>) args.getSerializable(ARG_EVENT);
-                System.out.println("LOADED EXISTING");
             }
         }
 
@@ -93,22 +88,6 @@ public class HomeFragment extends Fragment {
         eventsAdapter = new EventsAdapter(mEvents, getContext());
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
         recyclerView.setAdapter(eventsAdapter);
-        button_edit_profile2 = rootView.findViewById(R.id.button_edit_profile2);
-        button_signout = rootView.findViewById(R.id.button_signout);
-
-        button_edit_profile2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.loadEditProfile(fname, lname, profileImagePath);
-            }
-        });
-
-        button_signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.logoutPressed();
-            }
-        });
 
 
         db.collection("Member_Users")
@@ -225,20 +204,5 @@ public class HomeFragment extends Fragment {
         events.sort(new EventComparator());
         eventsAdapter.setEvents(events);
         eventsAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof HomeFragment.IhomeButtonActions){
-            this.mListener = (HomeFragment.IhomeButtonActions) context;
-        }else{
-            throw new RuntimeException(context.toString()+ "must implement IhomeButtonActions");
-        }
-    }
-
-    public interface IhomeButtonActions {
-        void logoutPressed();
-        void loadEditProfile(String fname, String lname, String profileImagePath);
     }
 }

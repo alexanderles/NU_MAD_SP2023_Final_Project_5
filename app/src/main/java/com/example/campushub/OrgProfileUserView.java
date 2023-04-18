@@ -99,8 +99,8 @@ public class OrgProfileUserView extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_org_profile_user_view, container, false);
 
-        orgName = rootView.findViewById(R.id.org_name_user_view);
-        orgEmail = rootView.findViewById(R.id.org_email_user_view);
+        orgName = rootView.findViewById(R.id.textView_user_name);
+        orgEmail = rootView.findViewById(R.id.textView_user_email);
         orgImage = rootView.findViewById(R.id.user_profile_image);
 
         recyclerView = rootView.findViewById(R.id.organization_events_recyclerview);

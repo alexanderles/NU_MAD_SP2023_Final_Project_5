@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +35,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Locale;
 
 
 public class OrgProfileOwnerView extends Fragment {
@@ -115,7 +109,7 @@ public class OrgProfileOwnerView extends Fragment {
         orgEmail = rootView.findViewById(R.id.org_email_owner_view);
         orgImage = rootView.findViewById(R.id.user_profile_image);
 
-        addEvent = rootView.findViewById(R.id.button_add_event);
+        addEvent = rootView.findViewById(R.id.button_edit_profile);
         logout = rootView.findViewById(R.id.button_sign_out_user);
 
         recyclerView = rootView.findViewById(R.id.organization_events_recyclerview);

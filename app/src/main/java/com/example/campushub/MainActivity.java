@@ -7,11 +7,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,8 +19,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import android.util.Log;
-import android.view.View;
 
 import com.example.campushub.Calendar.CalendarFragment;
 import com.example.campushub.Calendar.CalendarFragmentDay;
@@ -44,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements
         LandingFragment.IloginFragmentAction,
         CameraControlFragment.DisplayTakenPhoto,
         DisplayPhotoFragment.RetakePhoto,
-        HomeFragment.IhomeButtonActions,
         EditProfileFragment.IeditProfileActions,
         EventsAdapter.IEventRowActions,
         OrgProfileOwnerView.IOrgProfileOwnerActions,
@@ -52,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements
         OwnerEventView.IOwnerEventDetailsActions,
         NavigationFragment.INavigationActions,
         CalendarFragmentMonth.ICalendarMonthActions,
-        OrganizationsAdapter.IOrganizationRowActions{
+        OrganizationsAdapter.IOrganizationRowActions,
+        UserProfileFragment.IUserProfileAction {
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -295,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void profileClickedNav() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerMain, UserProfileOwnerView.newInstance(),"homeFragment")
+                .replace(R.id.containerMain, UserProfileFragment.newInstance(),"userProfileFragment")
                 .addToBackStack("Prev")
                 .commit();
     }
@@ -413,6 +409,19 @@ public class MainActivity extends AppCompatActivity implements
                                     .replace(R.id.containerMain, returnFragment)
                                     .commit();
                             returnFragment.updateImage(childPath);
+                        } else if (fromFragment.equals("edit_profile")) {
+                            EditProfileFragment returnFragment =
+                                    (EditProfileFragment) getSupportFragmentManager()
+                                            .findFragmentByTag(fromFragment);
+                            getSupportFragmentManager().popBackStack();
+                            if (galleryFragmentInfo == null) {
+                                getSupportFragmentManager().popBackStack();
+                            }
+                            galleryFragmentInfo = null;
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.containerMain, returnFragment)
+                                    .commit();
+                            returnFragment.updateImage(childPath);
                         }
                     }
                 })
@@ -427,18 +436,28 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void logoutPressed() {
-        mAuth.signOut();
-        currentUser = null;
-        populateScreen();
+    public void editUserProfileClicked(String firstName, String lastName, String profileImagePath) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, EditProfileFragment.newInstance(firstName, lastName, profileImagePath), "edit_profile")
+                .addToBackStack("edit_profile")
+                .commit();
     }
 
     @Override
-    public void loadEditProfile(String fname, String lname, String profileImagePath) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerMain, EditProfileFragment.newInstance(fname, lname, profileImagePath), "edit_profile")
-                .addToBackStack("edit_profile")
-                .commit();
+    public void changeUserPasswordClicked() {
+
+    }
+
+    @Override
+    public void accountInfoClicked() {
+
+    }
+
+    @Override
+    public void signoutClicked() {
+        mAuth.signOut();
+        currentUser = null;
+        populateScreen();
     }
 
     @Override
@@ -450,9 +469,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void loadHome() {
+    public void saveProfileChangesClicked() {
+        getSupportFragmentManager().popBackStack();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerMain, HomeFragment.newInstance(),"homeFragment")
+                .replace(R.id.containerMain, UserProfileFragment.newInstance(),"userProfileFragment")
                 .commit();
     }
 

@@ -94,12 +94,12 @@
         android:layout_height="1dp"
         android:layout_marginBottom="4dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/button_add_event"
+        app:layout_constraintBottom_toTopOf="@+id/button_edit_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_add_event"
+        android:id="@+id/button_edit_profile"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
