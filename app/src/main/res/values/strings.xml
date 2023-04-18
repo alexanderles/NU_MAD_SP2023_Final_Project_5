@@ -78,4 +78,5 @@
     <string name="create_event_text">Create</string>
     <string name="name_month_day_placeholder">Day</string>
     <string name="search_icon_descrip">Search Icon</string>
+    <string name="no_events_text">No Events Scheduled</string>
 </resources>

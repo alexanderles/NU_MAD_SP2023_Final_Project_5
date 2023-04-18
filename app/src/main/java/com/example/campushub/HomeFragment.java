@@ -71,6 +71,7 @@ public class HomeFragment extends Fragment {
         if (args != null) {
             if (args.containsKey(ARG_EVENT)) {
                 mEvents = (ArrayList<Event>) args.getSerializable(ARG_EVENT);
+                System.out.println("LOADED EXISTING");
             }
         }
 
