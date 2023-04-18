@@ -3,12 +3,6 @@ package com.example.campushub;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +10,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,8 +30,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.util.ArrayList;
 
 public class OwnerEventView extends Fragment {
 
@@ -142,7 +138,6 @@ public class OwnerEventView extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Log.d("DELETE", "Delete is firing user cleanse");
                                     db.collection("Org_Users")
                                             .document(mUser.getEmail())
                                             .collection("events")
@@ -153,10 +148,8 @@ public class OwnerEventView extends Fragment {
                                                 @Override
                                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                     if (task.isSuccessful()) {
-                                                        Log.d("DELETE", "Delete has found something");
                                                         for (QueryDocumentSnapshot doc : task.getResult()) {
                                                             String eventRef = doc.getId();
-                                                            Log.d("DELETE", "toDeleteRef: " + eventRef);
                                                             db.collection("Org_Users")
                                                                     .document(mUser.getEmail())
                                                                     .collection("events")

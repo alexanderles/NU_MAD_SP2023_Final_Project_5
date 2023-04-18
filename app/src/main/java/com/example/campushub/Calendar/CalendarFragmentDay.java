@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,13 @@ public class CalendarFragmentDay extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
+        loadEvents();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("CALENDAR", "onResume: " + mEvents);
         loadEvents();
     }
 
@@ -204,6 +212,10 @@ public class CalendarFragmentDay extends Fragment {
         events.sort(new EventComparator());
         eventsAdapter.setEvents(events);
         eventsAdapter.notifyDataSetChanged();
+    }
+
+    public LocalDate getSelectedDate() {
+        return selectedDate;
     }
 
     private void setEventsView() {

@@ -83,6 +83,12 @@ public class CalendarFragmentMonth extends Fragment implements CalendarAdapter.O
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        loadEvents();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -233,16 +239,12 @@ public class CalendarFragmentMonth extends Fragment implements CalendarAdapter.O
             int clickedDayNumber = Integer.parseInt(dayText);
             int selectedDayNumber = selectedDate.getDayOfMonth();
             int difference = Math.abs(selectedDayNumber - clickedDayNumber);
-            System.out.println(difference);
 
             if (selectedDayNumber >= clickedDayNumber) {
                 selectedDate = selectedDate.minusDays(difference);
             } else {
                 selectedDate = selectedDate.plusDays(difference);
             }
-
-            System.out.println(selectedDate.getDayOfMonth());
-
             monthActionsListener.dayClicked(selectedDate);
         }
     }
