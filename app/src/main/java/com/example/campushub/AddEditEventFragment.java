@@ -2,12 +2,6 @@ package com.example.campushub;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +10,11 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -143,7 +140,7 @@ public class AddEditEventFragment extends Fragment {
                             DocumentSnapshot snap = task.getResult();
                             orgName = snap.get("Org_Name").toString();
                             orgEmail = snap.get("email").toString();
-                            Object imagePathReturn = snap.get("Org_Image");
+                            Object imagePathReturn = snap.get("profileImage");
                             if (imagePathReturn != null) {
                                 orgImage = imagePathReturn.toString();
                             }
@@ -159,7 +156,6 @@ public class AddEditEventFragment extends Fragment {
         eventTime.setText(eventTimeString);
         eventDescription.setText(eventToEdit.getEventDescription());
         String eventDateString = eventToEdit.getEventTime().substring(0, 10);
-        Log.d("DATECHANGE", "loadEventInfo: " + eventDateString);
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         Calendar c = Calendar.getInstance();
         Date newDate;
@@ -169,8 +165,6 @@ public class AddEditEventFragment extends Fragment {
             throw new RuntimeException(e);
         }
         c.setTime(newDate);
-        Log.d("DATECHANGE", "loadEventInfo: " + newDate);
-        Log.d("DATECHANGE", "loadEventInfo: " + c.getTimeInMillis());
         eventDate.setDate(c.getTimeInMillis());
     }
 

@@ -51,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements
         AddEditEventFragment.IAddEditEventActions,
         OwnerEventView.IOwnerEventDetailsActions,
         NavigationFragment.INavigationActions,
-        CalendarFragmentMonth.ICalendarMonthActions{
+        CalendarFragmentMonth.ICalendarMonthActions,
+        OrganizationsAdapter.IOrganizationRowActions{
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -137,37 +138,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-
-
-
-   /* private void populateScreen() {
-        //      Check for Authenticated users ....
-        if(currentUser != null){
-            if(is_Orgprofile) {
-                // load the org profile screen
-                // else load the home screen
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.containerMain, OrgProfileOwnerView.newInstance(),"orgViewFragment")
-                        .addToBackStack("landingFragment")
-                        .commit();
-            }else if(!is_Orgprofile) {
-                //The user is authenticated, Populating The Home Fragment....
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.containerMain, HomeFragment.newInstance(),"homeFragment")
-                        .addToBackStack("landingFragment")
-                        .commit();
-                navigationBar.setVisibility(View.VISIBLE);
-            }
-
-        }else{
-//            The user is not logged in, load the login Fragment....
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.containerMain, LandingFragment.newInstance(),"landingFragment")
-                    .commit();
-        }
-    } */
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -176,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements
     }
     @Override
     public void onBackPressed() {
-        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("homeFragment");
+        /*HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("homeFragment");
 
         if (homeFragment != null && homeFragment.isVisible()) {
             // If the HomeFragment is currently visible, replace it with the LandingFragment
@@ -188,7 +158,8 @@ public class MainActivity extends AppCompatActivity implements
             getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
-        }
+        }*/
+        super.onBackPressed();
     }
 
 
@@ -482,6 +453,16 @@ public class MainActivity extends AppCompatActivity implements
     public void loadHome() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.containerMain, HomeFragment.newInstance(),"homeFragment")
+                .commit();
+    }
+
+    @Override
+    public void loadOrganizationProfile(Organization organization) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain,
+                        OrgProfileUserView.newInstance(organization.getEmail()),
+                        "orgProfileUserViewFragment")
+                .addToBackStack("org_profile_member_view")
                 .commit();
     }
 }

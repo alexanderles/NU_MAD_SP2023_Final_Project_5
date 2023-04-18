@@ -143,7 +143,6 @@ public class OrgProfileOwnerView extends Fragment {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 DocumentSnapshot snap = task.getResult();
                                                 if (task.isSuccessful()) {
-                                                    Log.d("NULLERROR", snap.toString());
                                                     Object potentialOrgImage = snap.get("eventOrganizerImage");
                                                     String eventOrgImage = (potentialOrgImage == null) ?
                                                             null : potentialOrgImage.toString();
@@ -203,10 +202,9 @@ public class OrgProfileOwnerView extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot snap = task.getResult();
-                            Log.d("ADAPTEREVENTS", snap.toString());
                             orgName.setText(snap.get("Org_Name").toString());
                             orgEmail.setText(snap.get("email").toString());
-                            Object imageStorage = snap.get("Org_Image");
+                            Object imageStorage = snap.get("profileImage");
                             if (imageStorage != null) {
                                 orgProfileImage = imageStorage.toString();
                                 StorageReference imageToLoad = storage.getReference().child(orgProfileImage);
@@ -240,11 +238,9 @@ public class OrgProfileOwnerView extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        Log.d("ADAPTEREVENTS", "FIRES");
                         if (task.isSuccessful()) {
                             for(QueryDocumentSnapshot document : task.getResult()){
                                 String eventReference = document.get("eventId").toString();
-                                Log.d("ADAPTEREVENTS", eventReference);
                                 db.collection("events")
                                         .document(eventReference)
                                         .get()
@@ -252,7 +248,6 @@ public class OrgProfileOwnerView extends Fragment {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
-                                                    Log.d("ADAPTEREVENTS", "FIRES ON COMPLETE");
                                                     DocumentSnapshot snap = task.getResult();
                                                     Object potentialOrgImage = snap.get("eventOrganizerImage");
                                                     String eventOrgImage = (potentialOrgImage == null) ?
@@ -272,9 +267,7 @@ public class OrgProfileOwnerView extends Fragment {
                                                     LocalDate dateTime = LocalDate.parse(
                                                             newEvent.getEventTime(),
                                                             dateFormatter);
-                                                    Log.d("ADAPTEREVENTS", dateTime.toString());
                                                     if (dateTime.compareTo(LocalDate.now()) >= 0) {
-                                                        Log.d("ADAPTEREVENTS", "FIRES ON DATE");
                                                         events.add(newEvent);
                                                     }
                                                     updateRecyclerView(events);
@@ -291,7 +284,6 @@ public class OrgProfileOwnerView extends Fragment {
     public void updateRecyclerView(ArrayList<Event> events){
         events.sort(new EventComparator());
         eventsAdapter.setEvents(events);
-        Log.d("ADAPTEREVENTS", events.toString());
         eventsAdapter.notifyDataSetChanged();
     }
 

@@ -151,7 +151,7 @@ public class OrganizationSignUpFragment extends Fragment implements View.OnClick
                                                         userData.put("Org_Name", orgname);
                                                         userData.put("email", email);
                                                         if (profileImageURL != null) {
-                                                            userData.put("profileimage", profileImageURL);
+                                                            userData.put("profileImage", profileImageURL);
                                                         }
                                                         //userData.put("password", password);
                                                         firestore.collection("Org_Users")

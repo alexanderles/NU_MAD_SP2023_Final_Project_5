@@ -145,7 +145,7 @@ public class MemberSignUpFragment extends Fragment implements View.OnClickListen
                                                         userData.put("email", email);
                                                         //userData.put("password", password);
                                                         if (profileImageURL != null) {
-                                                            userData.put("profileimage", profileImageURL);
+                                                            userData.put("profileImage", profileImageURL);
                                                         }
                                                         firestore.collection("Member_Users")
                                                                 .document(email)

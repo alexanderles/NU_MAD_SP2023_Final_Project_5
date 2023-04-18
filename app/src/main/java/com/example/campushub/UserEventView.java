@@ -2,10 +2,6 @@ package com.example.campushub;
 
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -79,8 +77,6 @@ public class UserEventView extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
-
-        loadRegistration();
     }
 
     @Override
@@ -126,14 +122,7 @@ public class UserEventView extends Fragment {
             });
         }
 
-        if (registered) {
-            register.setBackgroundColor(getResources().getColor(R.color.campus_hub_red));
-            register.setText("Deregister");
-        }
-        else {
-            register.setBackgroundColor(getResources().getColor(R.color.campus_hub_color));
-            register.setText("Register");
-        }
+        loadRegistration();
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,12 +153,24 @@ public class UserEventView extends Fragment {
                                     eventRegisterRef = doc.getId();
                                 }
                             }
+                            updateRegisterButton();
                         }
                         else {
                             registered = false;
                         }
                     }
                 });
+    }
+
+    private void updateRegisterButton() {
+        if (registered) {
+            register.setBackgroundColor(getResources().getColor(R.color.campus_hub_red));
+            register.setText("Deregister");
+        }
+        else {
+            register.setBackgroundColor(getResources().getColor(R.color.campus_hub_color));
+            register.setText("Register");
+        }
     }
 
     private void handleRegister() {
@@ -183,6 +184,8 @@ public class UserEventView extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+                                registered = false;
+                                updateRegisterButton();
                                 Toast.makeText(getActivity(), "Deregistered from event", Toast.LENGTH_LONG);
                             } else {
                                 Toast.makeText(getActivity(), "Failed to deregister", Toast.LENGTH_LONG);
@@ -203,6 +206,8 @@ public class UserEventView extends Fragment {
                             if (task.isSuccessful()) {
                                 Toast.makeText(getActivity(), "Registered for event", Toast.LENGTH_LONG);
                                 eventRegisterRef = task.getResult().getId();
+                                registered = true;
+                                updateRegisterButton();
                             }
                             else {
                                 Toast.makeText(getActivity(), "Failed to register", Toast.LENGTH_LONG);
