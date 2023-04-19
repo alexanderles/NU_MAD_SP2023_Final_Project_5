@@ -22,6 +22,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for displaying an organization to a user
+ */
 public class OrganizationsAdapter extends RecyclerView.Adapter<OrganizationsAdapter.ViewHolder> {
     private ArrayList<Organization> organizations;
 

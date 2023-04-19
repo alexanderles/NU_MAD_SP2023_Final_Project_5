@@ -37,7 +37,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-
+/**
+ * Fragment representing an Organization as viewed by a user
+ */
 public class OrgProfileUserView extends Fragment {
 
     private static final String ARG_ORG = "organization";

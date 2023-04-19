@@ -40,7 +40,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-
+/**
+ * Fragment representing an Organization as viewed by the owner of the organization
+ */
 public class OrgProfileOwnerView extends Fragment {
     private static final String ARG_EVENT = "events";
 
@@ -126,7 +128,7 @@ public class OrgProfileOwnerView extends Fragment {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if(error == null){
-//                            retrieving all the elements from Firebase....
+                            // retrieving all the elements from Firebase....
                             ArrayList<Event> newEvents = new ArrayList<>();
                             for(DocumentSnapshot document : value.getDocuments()){
                                 String eventReference = document.get("eventId").toString();

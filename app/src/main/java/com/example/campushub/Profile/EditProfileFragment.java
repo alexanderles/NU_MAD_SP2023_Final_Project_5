@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,9 @@ import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-
+/**
+ * Fragment for a user to edit their profile and account details
+ */
 public class EditProfileFragment extends Fragment {
 
     private static final String ARG_FNAME = "fname";
@@ -153,7 +154,6 @@ public class EditProfileFragment extends Fragment {
     }
 
     public void loadImage() {
-        Log.d("TAG", "loadImage: START");
         StorageReference imageToLoad = storage.getReference().child(profileImagePath);
         imageToLoad.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override

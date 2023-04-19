@@ -32,7 +32,9 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Fragment for registering an Organization to the database
+ */
 public class OrganizationSignUpFragment extends Fragment implements View.OnClickListener {
 
     private FirebaseAuth mAuth;

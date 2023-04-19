@@ -27,9 +27,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link UserProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment for a user to view their profile with options for
+ *  - Editing profile
+ *  - Viewing application info
+ *  - Signing out
  */
 public class UserProfileFragment extends Fragment {
 
