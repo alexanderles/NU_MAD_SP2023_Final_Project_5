@@ -1,4 +1,4 @@
-package com.example.campushub;
+package com.example.campushub.Events;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

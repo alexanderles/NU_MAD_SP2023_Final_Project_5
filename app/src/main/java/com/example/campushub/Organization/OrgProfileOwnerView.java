@@ -1,4 +1,4 @@
-package com.example.campushub;
+package com.example.campushub.Organization;
 
 import android.content.Context;
 import android.net.Uri;
@@ -18,13 +18,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
+import com.example.campushub.Events.Event;
+import com.example.campushub.Events.EventComparator;
+import com.example.campushub.Events.EventsAdapter;
+import com.example.campushub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

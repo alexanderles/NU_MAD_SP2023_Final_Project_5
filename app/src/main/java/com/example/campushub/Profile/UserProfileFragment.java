@@ -1,4 +1,4 @@
-package com.example.campushub;
+package com.example.campushub.Profile;
 
 import android.content.Context;
 import android.net.Uri;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.campushub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +38,6 @@ public class UserProfileFragment extends Fragment {
     private ImageView imageViewProfileImage;
 
     private Button buttonEditProfile;
-    private Button buttonChangePassword;
     private Button buttonAccountInfo;
     private Button buttonSignout;
 
@@ -88,8 +88,7 @@ public class UserProfileFragment extends Fragment {
         textViewEmail = rootView.findViewById(R.id.textView_user_email);
         imageViewProfileImage = rootView.findViewById(R.id.user_profile_image);
         buttonEditProfile = rootView.findViewById(R.id.button_edit_profile);
-        buttonChangePassword = rootView.findViewById(R.id.button_change_password);
-        buttonAccountInfo = rootView.findViewById(R.id.button_account_info);
+        buttonAccountInfo = rootView.findViewById(R.id.button_app_info);
         buttonSignout = rootView.findViewById(R.id.button_sign_out_user);
 
         loadUserInfo();
@@ -101,17 +100,10 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
-        buttonChangePassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.changeUserPasswordClicked();
-            }
-        });
-
         buttonAccountInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.changeUserPasswordClicked();
+                mListener.accountInfoClicked();
             }
         });
 
@@ -178,7 +170,6 @@ public class UserProfileFragment extends Fragment {
 
     interface IUserProfileAction {
         public void editUserProfileClicked(String firstName, String lastName, String profileImagePath);
-        public void changeUserPasswordClicked();
         public void accountInfoClicked();
         public void signoutClicked();
     }

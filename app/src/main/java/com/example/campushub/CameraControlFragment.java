@@ -188,7 +188,7 @@ public class CameraControlFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    public interface DisplayTakenPhoto{
+    public interface DisplayTakenPhoto {
         void onTakePhoto(Uri imageUri, String fromFragment);
         void onOpenGalleryPressed(String fromFragment);
     }

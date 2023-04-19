@@ -6,7 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTintMode="add"
-    tools:context=".UserProfileFragment">
+    tools:context=".Profile.UserProfileFragment">
+
+    <View
+        android:id="@+id/between_button_div_4"
+        android:layout_width="409dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_sign_out_user" />
 
     <TextView
         android:id="@+id/profile_title"
@@ -87,7 +97,21 @@
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/between_button_div_2" />
+        app:layout_constraintTop_toBottomOf="@+id/between_button_div_1" />
+
+    <TextView
+        android:id="@+id/app_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/app_info_label_text"
+        android:textAllCaps="true"
+        android:textColor="#5E000000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/between_button_div_4" />
 
     <View
         android:id="@+id/button_div"
@@ -105,7 +129,7 @@
         android:layout_height="1dp"
         android:layout_marginBottom="4dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/button_account_info"
+        app:layout_constraintBottom_toTopOf="@+id/button_app_info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -131,50 +155,22 @@
         android:id="@+id/between_button_div_1"
         android:layout_width="409dp"
         android:layout_height="1dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="16dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_edit_profile" />
 
-    <Button
-        android:id="@+id/button_change_password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:backgroundTint="@color/white"
-        android:text="@string/change_password_text"
-        android:textAlignment="textStart"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        app:icon="@drawable/ic_password"
-        app:iconGravity="end"
-        app:iconTint="@color/campus_hub_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/between_button_div_1" />
-
-    <View
-        android:id="@+id/between_button_div_2"
-        android:layout_width="409dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="4dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_change_password" />
-
 
     <Button
-        android:id="@+id/button_account_info"
+        android:id="@+id/button_app_info"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:foregroundTintMode="add"
         android:shadowColor="@color/campus_hub_color"
-        android:text="@string/account_info_text"
+        android:text="@string/app_info_label_text"
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="@color/black"
@@ -185,25 +181,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/account_subtitle" />
+        app:layout_constraintTop_toBottomOf="@+id/app_subtitle" />
+
 
     <View
         android:id="@+id/between_button_div_3"
         android:layout_width="409dp"
         android:layout_height="1dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/button_sign_out_user"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_account_info" />
-
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button_sign_out_user"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="16dp"
         android:foregroundTintMode="add"
         android:shadowColor="@color/campus_hub_color"
         android:text="@string/sign_out_text"
@@ -216,7 +213,7 @@
         app:iconTint="@color/campus_hub_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/between_button_div_3" />
+        app:layout_constraintTop_toBottomOf="@+id/account_subtitle" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

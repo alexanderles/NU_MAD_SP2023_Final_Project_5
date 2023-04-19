@@ -1,4 +1,4 @@
-package com.example.campushub;
+package com.example.campushub.Organization;
 
 import java.io.Serializable;
 

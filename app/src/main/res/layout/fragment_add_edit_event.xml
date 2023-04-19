@@ -5,7 +5,7 @@
     android:id="@+id/add_edit_event_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddEditEventFragment">
+    tools:context=".Events.AddEditEventFragment">
 
     <TextView
         android:id="@+id/add_edit_event_title"

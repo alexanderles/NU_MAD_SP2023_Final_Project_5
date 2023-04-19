@@ -18,13 +18,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.campushub.Events.AddEditEventFragment;
+import com.example.campushub.Events.Event;
+import com.example.campushub.Events.EventsAdapter;
+import com.example.campushub.Events.OwnerEventView;
+import com.example.campushub.Events.UserEventView;
+import com.example.campushub.Organization.OrgProfileOwnerView;
+import com.example.campushub.Organization.OrgProfileUserView;
+import com.example.campushub.Organization.Organization;
+import com.example.campushub.Organization.OrganizationSignUpFragment;
+import com.example.campushub.Organization.OrganizationsAdapter;
+import com.example.campushub.Profile.AppInfoFragment;
+import com.example.campushub.Profile.EditProfileFragment;
+import com.example.campushub.Profile.UserProfileFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.example.campushub.Calendar.CalendarFragment;
 import com.example.campushub.Calendar.CalendarFragmentDay;
 import com.example.campushub.Calendar.CalendarFragmentMonth;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -70,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements
     private FirebaseStorage storage;
 
     private View navigationBar;
+    private boolean returningFromGallery = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,8 +165,13 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         currentUser = mAuth.getCurrentUser();
-        populateScreen();
+        if (returningFromGallery) {
+            returningFromGallery = false;
+        } else {
+            populateScreen();
+        }
     }
+
     @Override
     public void onBackPressed() {
         Fragment dayFound = getSupportFragmentManager().findFragmentByTag("dayFragment");
@@ -335,6 +352,21 @@ public class MainActivity extends AppCompatActivity implements
                 .commit();
     }
 
+    @Override
+    public void onOpenGalleryPressed(String fromFragment) {
+        galleryFragmentInfo = fromFragment;
+        returningFromGallery = true;
+        openGallery(fromFragment);
+    }
+
+    private void openGallery(String fromFragment) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        galleryLauncher.launch(intent);
+    }
+
     ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -350,28 +382,11 @@ public class MainActivity extends AppCompatActivity implements
                     }
                     else if (result.getResultCode() == RESULT_CANCELED) {
                         CameraControlFragment returnToControl = (CameraControlFragment) getSupportFragmentManager().findFragmentByTag("cameraFragment");
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.containerMain, returnToControl)
-                                .commit();
                     }
                 }
 
             }
     );
-
-    private void openGallery(String fromFragment) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        galleryLauncher.launch(intent);
-    }
-
-    @Override
-    public void onOpenGalleryPressed(String fromFragment) {
-        galleryFragmentInfo = fromFragment;
-        openGallery(fromFragment);
-    }
 
     @Override
     public void onRetakePressed(String fromFragment) {
@@ -410,13 +425,8 @@ public class MainActivity extends AppCompatActivity implements
                                     (MemberSignUpFragment) getSupportFragmentManager()
                                             .findFragmentByTag(fromFragment);
                             getSupportFragmentManager().popBackStack();
-                            if (galleryFragmentInfo == null) {
-                                getSupportFragmentManager().popBackStack();
-                            }
+                            getSupportFragmentManager().popBackStack();
                             galleryFragmentInfo = null;
-                            getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.containerMain, returnFragment)
-                                    .commit();
                             returnFragment.updateImage(childPath);
                         }
                         else if (fromFragment.equals("orgRegisterFragment")) {
@@ -424,26 +434,17 @@ public class MainActivity extends AppCompatActivity implements
                                     (OrganizationSignUpFragment) getSupportFragmentManager()
                                             .findFragmentByTag(fromFragment);
                             getSupportFragmentManager().popBackStack();
-                            if (galleryFragmentInfo == null) {
-                                getSupportFragmentManager().popBackStack();
-                            }
+                            getSupportFragmentManager().popBackStack();
                             galleryFragmentInfo = null;
-                            getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.containerMain, returnFragment)
-                                    .commit();
                             returnFragment.updateImage(childPath);
                         } else if (fromFragment.equals("edit_profile")) {
                             EditProfileFragment returnFragment =
                                     (EditProfileFragment) getSupportFragmentManager()
                                             .findFragmentByTag(fromFragment);
                             getSupportFragmentManager().popBackStack();
-                            if (galleryFragmentInfo == null) {
-                                getSupportFragmentManager().popBackStack();
-                            }
+                            getSupportFragmentManager().popBackStack();
                             galleryFragmentInfo = null;
-                            getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.containerMain, returnFragment)
-                                    .commit();
+
                             returnFragment.updateImage(childPath);
                         }
                     }
@@ -467,19 +468,18 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void changeUserPasswordClicked() {
-
-    }
-
-    @Override
     public void accountInfoClicked() {
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, AppInfoFragment.newInstance(), "edit_profile")
+                .addToBackStack("edit_profile")
+                .commit();
     }
 
     @Override
     public void signoutClicked() {
         mAuth.signOut();
         currentUser = null;
+        navigationBar.setVisibility(View.GONE);
         populateScreen();
     }
 
@@ -494,9 +494,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void saveProfileChangesClicked() {
         getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerMain, UserProfileFragment.newInstance(),"userProfileFragment")
-                .commit();
     }
 
     @Override

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTintMode="add"
-    tools:context=".OrgProfileOwnerView">
+    tools:context=".Organization.OrgProfileOwnerView">
 
     <TextView
         android:id="@+id/profile_title"

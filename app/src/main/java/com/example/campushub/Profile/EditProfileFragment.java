@@ -1,4 +1,4 @@
-package com.example.campushub;
+package com.example.campushub.Profile;
 
 import android.content.Context;
 import android.net.Uri;
@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.campushub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -94,7 +96,7 @@ public class EditProfileFragment extends Fragment {
         edit_lastName = rootView.findViewById(R.id.edit_lastName);
         edit_lastName.setText(lname);
         button_save_profile = rootView.findViewById(R.id.button_save_profile);
-        if (profileImagePath != null) {
+        if (profileImagePath != null && newProfileImagePath == null) {
             loadImage();
         }
 
@@ -151,6 +153,7 @@ public class EditProfileFragment extends Fragment {
     }
 
     public void loadImage() {
+        Log.d("TAG", "loadImage: START");
         StorageReference imageToLoad = storage.getReference().child(profileImagePath);
         imageToLoad.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
@@ -170,12 +173,12 @@ public class EditProfileFragment extends Fragment {
     }
 
     public void updateImage(String imagePath) {
+        newProfileImagePath = imagePath;
         StorageReference imageToLoad = storage.getReference().child(imagePath);
         imageToLoad.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
-                    newProfileImagePath = imagePath;
                     Glide.with(getActivity())
                             .load(task.getResult())
                             .centerCrop()

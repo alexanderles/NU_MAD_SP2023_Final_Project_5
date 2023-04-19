@@ -5,7 +5,7 @@
     android:id="@+id/EditProfileConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditProfileFragment" >
+    tools:context=".Profile.EditProfileFragment" >
 
     <ImageView
         android:id="@+id/imageView_camera"

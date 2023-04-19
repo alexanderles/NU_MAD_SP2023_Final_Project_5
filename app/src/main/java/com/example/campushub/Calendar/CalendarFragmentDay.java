@@ -12,9 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.campushub.Event;
-import com.example.campushub.EventComparator;
-import com.example.campushub.EventsAdapter;
+import com.example.campushub.Events.Event;
+import com.example.campushub.Events.EventComparator;
+import com.example.campushub.Events.EventsAdapter;
 import com.example.campushub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
