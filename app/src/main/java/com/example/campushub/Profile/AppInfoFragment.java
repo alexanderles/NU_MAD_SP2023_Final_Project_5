@@ -23,7 +23,7 @@ public class AppInfoFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment AccountInfoFragment.
+     * @return A new instance of fragment AppInfoFragment.
      */
     public static AppInfoFragment newInstance() {
         AppInfoFragment fragment = new AppInfoFragment();

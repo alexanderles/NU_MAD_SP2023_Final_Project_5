@@ -170,8 +170,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        // currentUser = mAuth.getCurrentUser();
-        currentUser = null;
+        currentUser = mAuth.getCurrentUser();
         if (returningFromGallery) {
             returningFromGallery = false;
         } else {
