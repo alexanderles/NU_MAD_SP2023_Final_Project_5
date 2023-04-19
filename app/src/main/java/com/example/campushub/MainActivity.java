@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void loadCorrectFragment(boolean isOrgUser) {
+        clearBackStack();
         if (isOrgUser) {
             // Load the org profile screen
             getSupportFragmentManager().beginTransaction()
@@ -159,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements
                     });
         } else {
             // The user is not logged in, load the login Fragment...
+            clearBackStack();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.containerMain, LandingFragment.newInstance(), "landingFragment")
                     .commit();
