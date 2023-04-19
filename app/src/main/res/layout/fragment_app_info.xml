@@ -40,7 +40,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="48dp"
         android:fontFamily="@font/roboto"
-        android:text="@string/account_info_text"
+        android:text="@string/app_info_label_text"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"

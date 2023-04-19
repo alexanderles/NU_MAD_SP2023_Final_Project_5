@@ -134,8 +134,8 @@
 
     <Button
         android:id="@+id/button_memRegister"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/campus_hub_color"
         android:text="@string/Register2"
