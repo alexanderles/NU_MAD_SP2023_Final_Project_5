@@ -118,6 +118,16 @@ public class AddEditEventFragment extends Fragment {
                     Toast.makeText(getActivity(), "Fill in all fields", Toast.LENGTH_LONG).show();
                     return;
                 }
+                if (!eventTime.getText().toString().matches("\\d{2}:\\d{2}")) {
+                    Toast.makeText(getActivity(), "Invalid time syntax, please use hh:mm", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                int hours = Integer.parseInt(eventTime.getText().toString().split(":")[0]);
+                int minutes = Integer.parseInt(eventTime.getText().toString().split(":")[1]);
+                if (hours > 23 || minutes > 59) {
+                    Toast.makeText(getActivity(), "Invalid time, please try again", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 if (eventToEdit != null) {
                     updateEvent();
                 }
