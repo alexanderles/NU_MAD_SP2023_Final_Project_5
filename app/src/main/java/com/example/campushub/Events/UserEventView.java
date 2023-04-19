@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Fragment representing an even as seen by a user who can register for the event,
+ * Fragment representing an event as seen by a user who can register for the event,
  * or deregister from the event
  */
 public class UserEventView extends Fragment {
