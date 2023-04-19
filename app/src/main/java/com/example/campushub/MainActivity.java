@@ -55,6 +55,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+
+/**
+ * Main Activity for CampusHub Application
+ */
 public class MainActivity extends AppCompatActivity implements
         OrganizationSignUpFragment.IregisterFragmentAction,
         MemberSignUpFragment.ImemberRegisterFragmentAction,
@@ -108,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
         if (!isInternetAvailable()) {
             Toast.makeText(MainActivity.this,
                     "Internet not available. Please connect to use this app.",
-                    Toast.LENGTH_LONG);
+                    Toast.LENGTH_LONG).show();
         }
         navigationBar = findViewById(R.id.fragmentContainerViewNav);
         navigationBar.setTransitionVisibility(View.GONE);
@@ -403,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onUploadButtonPressed(Uri imageUri, ProgressBar progressBar, String fromFragment) {
         progressBar.setVisibility(View.VISIBLE);
-//        Upload an image from local file....
+        // Upload an image from local file....
         String childPath = "images/"+imageUri.getLastPathSegment();
         StorageReference storageReference = storage.getReference().child(childPath);
         UploadTask uploadImage = storageReference.putFile(imageUri);
@@ -420,32 +424,38 @@ public class MainActivity extends AppCompatActivity implements
                         Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
 
-                        if (fromFragment.equals("memRegisterFragment")) {
-                            MemberSignUpFragment returnFragment =
-                                    (MemberSignUpFragment) getSupportFragmentManager()
-                                            .findFragmentByTag(fromFragment);
-                            getSupportFragmentManager().popBackStack();
-                            getSupportFragmentManager().popBackStack();
-                            galleryFragmentInfo = null;
-                            returnFragment.updateImage(childPath);
-                        }
-                        else if (fromFragment.equals("orgRegisterFragment")) {
-                            OrganizationSignUpFragment returnFragment =
-                                    (OrganizationSignUpFragment) getSupportFragmentManager()
-                                            .findFragmentByTag(fromFragment);
-                            getSupportFragmentManager().popBackStack();
-                            getSupportFragmentManager().popBackStack();
-                            galleryFragmentInfo = null;
-                            returnFragment.updateImage(childPath);
-                        } else if (fromFragment.equals("edit_profile")) {
-                            EditProfileFragment returnFragment =
-                                    (EditProfileFragment) getSupportFragmentManager()
-                                            .findFragmentByTag(fromFragment);
-                            getSupportFragmentManager().popBackStack();
-                            getSupportFragmentManager().popBackStack();
-                            galleryFragmentInfo = null;
+                        switch (fromFragment) {
+                            case "memRegisterFragment": {
+                                MemberSignUpFragment returnFragment =
+                                        (MemberSignUpFragment) getSupportFragmentManager()
+                                                .findFragmentByTag(fromFragment);
+                                getSupportFragmentManager().popBackStack();
+                                getSupportFragmentManager().popBackStack();
+                                galleryFragmentInfo = null;
+                                returnFragment.updateImage(childPath);
+                                break;
+                            }
+                            case "orgRegisterFragment": {
+                                OrganizationSignUpFragment returnFragment =
+                                        (OrganizationSignUpFragment) getSupportFragmentManager()
+                                                .findFragmentByTag(fromFragment);
+                                getSupportFragmentManager().popBackStack();
+                                getSupportFragmentManager().popBackStack();
+                                galleryFragmentInfo = null;
+                                returnFragment.updateImage(childPath);
+                                break;
+                            }
+                            case "edit_profile": {
+                                EditProfileFragment returnFragment =
+                                        (EditProfileFragment) getSupportFragmentManager()
+                                                .findFragmentByTag(fromFragment);
+                                getSupportFragmentManager().popBackStack();
+                                getSupportFragmentManager().popBackStack();
+                                galleryFragmentInfo = null;
 
-                            returnFragment.updateImage(childPath);
+                                returnFragment.updateImage(childPath);
+                                break;
+                            }
                         }
                     }
                 })

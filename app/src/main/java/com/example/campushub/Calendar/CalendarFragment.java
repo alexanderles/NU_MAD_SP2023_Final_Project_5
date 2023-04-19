@@ -1,9 +1,7 @@
 package com.example.campushub.Calendar;
 
-import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -13,9 +11,9 @@ import android.view.ViewGroup;
 import com.example.campushub.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link CalendarFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment for Calendar
+ *
+ * This fragment holds other fragments for month and day calendar views
  */
 public class CalendarFragment extends Fragment {
 
@@ -42,8 +40,6 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override

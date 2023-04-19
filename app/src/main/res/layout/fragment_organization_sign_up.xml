@@ -20,10 +20,12 @@
 
     <Button
         android:id="@+id/button_register"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/campus_hub_color"
         android:text="@string/register"
+        app:cornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="@+id/orgProfilePhoto"
         app:layout_constraintStart_toStartOf="@+id/orgProfilePhoto"
         app:layout_constraintTop_toBottomOf="@+id/orgProfilePhoto" />

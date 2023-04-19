@@ -29,6 +29,10 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Fragment representing an even as seen by a user who can register for the event,
+ * or deregister from the event
+ */
 public class UserEventView extends Fragment {
 
     private static final String ARG_EVENT = "event";

@@ -2,6 +2,9 @@ package com.example.campushub.Events;
 
 import java.io.Serializable;
 
+/**
+ * Class representing an Event hosted by an organization
+ */
 public class Event implements Serializable {
     private String eventId;
     private String eventName;

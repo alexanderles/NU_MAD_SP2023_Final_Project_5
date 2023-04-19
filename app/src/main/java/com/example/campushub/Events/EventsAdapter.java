@@ -16,13 +16,14 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for displying Events
+ */
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder>{
 
     private ArrayList<Event> events;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseUser mUser = mAuth.getCurrentUser();
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private IEventRowActions mListener;
     private Context mContext;

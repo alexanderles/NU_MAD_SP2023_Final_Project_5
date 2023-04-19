@@ -32,6 +32,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+/**
+ * Fragment representing an Event as seen by the organization hosting the event
+ */
 public class OwnerEventView extends Fragment {
 
     private static final String ARG_EVENT = "event";
@@ -213,7 +216,7 @@ public class OwnerEventView extends Fragment {
         if (context instanceof IOwnerEventDetailsActions){
             this.mListener = (IOwnerEventDetailsActions) context;
         }else{
-            throw new RuntimeException(context.toString()+ "must implement IOwnerEventDetailsActions");
+            throw new RuntimeException(context + "must implement IOwnerEventDetailsActions");
         }
     }
 

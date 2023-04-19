@@ -6,6 +6,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Class for comparing Events by date and time
+ */
 public class EventComparator implements Comparator<Event> {
     @Override
     public int compare(Event event, Event t1) {

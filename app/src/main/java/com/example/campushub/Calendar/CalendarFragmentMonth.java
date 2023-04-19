@@ -32,9 +32,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link CalendarFragmentMonth#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment for Calendar Month View
+ *
+ * Shows the days of the month with dots for days that have events that the
+ * user has registered for
+ *
+ * Credit to "CodeWithCal" (https://www.youtube.com/@CodeWithCal) for calendar
+ * design inspiration
  */
 public class CalendarFragmentMonth extends Fragment implements CalendarAdapter.OnCalendarItemListener {
 
@@ -188,13 +192,8 @@ public class CalendarFragmentMonth extends Fragment implements CalendarAdapter.O
         monthYearText.setText(monthYearFromDate(selectedDate));
         ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
 
-        if (selectedDate.getMonth() == today.getMonth()) {
-            isCurrentMonth = true;
-        } else {
-            isCurrentMonth = false;
-        }
+        isCurrentMonth = selectedDate.getMonth() == today.getMonth();
         calendarAdapter = new CalendarAdapter(today, daysInMonth, this, isCurrentMonth, selectedDate);
-        // calendarAdapter.setEvents();
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);

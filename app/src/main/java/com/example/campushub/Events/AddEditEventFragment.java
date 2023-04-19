@@ -34,7 +34,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-
+/**
+ * Fragment for adding or editing an event
+ */
 public class AddEditEventFragment extends Fragment {
 
     private static final String ARG_EVENT = "event";
@@ -47,7 +49,6 @@ public class AddEditEventFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private FirebaseStorage storage;
 
     private IAddEditEventActions mListener;
 

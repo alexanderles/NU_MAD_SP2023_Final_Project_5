@@ -168,7 +168,7 @@ public class UserProfileFragment extends Fragment {
                 });
     }
 
-    interface IUserProfileAction {
+    public interface IUserProfileAction {
         public void editUserProfileClicked(String firstName, String lastName, String profileImagePath);
         public void accountInfoClicked();
         public void signoutClicked();

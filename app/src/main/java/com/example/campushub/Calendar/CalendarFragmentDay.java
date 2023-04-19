@@ -30,9 +30,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link CalendarFragmentDay#newInstance} factory method to
- * create an instance of this fragment.
+ * Calendar Fragment for day view
+ *
+ * Shows events that the user has registered for on a given day
  */
 public class CalendarFragmentDay extends Fragment {
 
@@ -210,9 +210,5 @@ public class CalendarFragmentDay extends Fragment {
 
     public LocalDate getSelectedDate() {
         return selectedDate;
-    }
-
-    private void setEventsView() {
-
     }
 }
