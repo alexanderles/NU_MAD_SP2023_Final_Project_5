@@ -30,6 +30,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * Landing fragment for all users who are not logged in
+ */
 public class LandingFragment extends Fragment implements View.OnClickListener {
 
     private EditText editTextLoginEmail, editTextLoginPassword;

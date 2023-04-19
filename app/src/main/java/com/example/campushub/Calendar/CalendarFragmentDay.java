@@ -12,9 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.campushub.Event;
-import com.example.campushub.EventComparator;
-import com.example.campushub.EventsAdapter;
+import com.example.campushub.Events.Event;
+import com.example.campushub.Events.EventComparator;
+import com.example.campushub.Events.EventsAdapter;
 import com.example.campushub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,9 +30,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link CalendarFragmentDay#newInstance} factory method to
- * create an instance of this fragment.
+ * Calendar Fragment for day view
+ *
+ * Shows events that the user has registered for on a given day
  */
 public class CalendarFragmentDay extends Fragment {
 
@@ -210,9 +210,5 @@ public class CalendarFragmentDay extends Fragment {
 
     public LocalDate getSelectedDate() {
         return selectedDate;
-    }
-
-    private void setEventsView() {
-
     }
 }

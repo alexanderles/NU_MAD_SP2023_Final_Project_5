@@ -1,4 +1,4 @@
-package com.example.campushub;
+package com.example.campushub.Events;
 
 import android.content.Context;
 import android.net.Uri;
@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.campushub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +32,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+/**
+ * Fragment representing an Event as seen by the organization hosting the event
+ */
 public class OwnerEventView extends Fragment {
 
     private static final String ARG_EVENT = "event";
@@ -212,7 +216,7 @@ public class OwnerEventView extends Fragment {
         if (context instanceof IOwnerEventDetailsActions){
             this.mListener = (IOwnerEventDetailsActions) context;
         }else{
-            throw new RuntimeException(context.toString()+ "must implement IOwnerEventDetailsActions");
+            throw new RuntimeException(context + "must implement IOwnerEventDetailsActions");
         }
     }
 

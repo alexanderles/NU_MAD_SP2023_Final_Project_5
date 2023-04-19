@@ -1,4 +1,4 @@
-package com.example.campushub;
+package com.example.campushub.Events;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.campushub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +29,10 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Fragment representing an event as seen by a user who can register for the event,
+ * or deregister from the event
+ */
 public class UserEventView extends Fragment {
 
     private static final String ARG_EVENT = "event";

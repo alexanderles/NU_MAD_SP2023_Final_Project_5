@@ -1,21 +1,28 @@
-package com.example.campushub;
+package com.example.campushub.Organization;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
+import com.example.campushub.Events.Event;
+import com.example.campushub.Events.EventComparator;
+import com.example.campushub.Events.EventsAdapter;
+import com.example.campushub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,18 +40,20 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-
-public class OrgProfileUserView extends Fragment {
-
-    private static final String ARG_ORG = "organization";
+/**
+ * Fragment representing an Organization as viewed by the owner of the organization
+ */
+public class OrgProfileOwnerView extends Fragment {
     private static final String ARG_EVENT = "events";
-
-    private ArrayList<Event> mEvents;
-    private String orgProfileImage;
-    private String organizerEmail;
 
     private TextView orgName, orgEmail;
     private ImageView orgImage;
+
+    private Button addEvent, logout;
+
+    private ArrayList<Event> mEvents;
+    private IOrgProfileOwnerActions mListener;
+    private String orgProfileImage;
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
@@ -55,23 +64,17 @@ public class OrgProfileUserView extends Fragment {
     private EventsAdapter eventsAdapter;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
 
-    public OrgProfileUserView() {
+    public OrgProfileOwnerView() {
         // Required empty public constructor
     }
 
-    public static OrgProfileUserView newInstance(String organizerEmail) {
-        OrgProfileUserView fragment = new OrgProfileUserView();
+
+    public static OrgProfileOwnerView newInstance() {
+        OrgProfileOwnerView fragment = new OrgProfileOwnerView();
         Bundle args = new Bundle();
         args.putSerializable(ARG_EVENT, new ArrayList<Event>());
-        args.putString(ARG_ORG, organizerEmail);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadData();
     }
 
     @Override
@@ -82,7 +85,6 @@ public class OrgProfileUserView extends Fragment {
             if (args.containsKey(ARG_EVENT)) {
                 mEvents = (ArrayList<Event>) args.getSerializable(ARG_EVENT);
             }
-            organizerEmail = args.getString(ARG_ORG);
         }
 
         db = FirebaseFirestore.getInstance();
@@ -94,14 +96,24 @@ public class OrgProfileUserView extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_org_profile_user_view, container, false);
 
-        orgName = rootView.findViewById(R.id.org_name_user_view);
-        orgEmail = rootView.findViewById(R.id.org_email_user_view);
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_org_profile_owner_view, container, false);
+
+        orgName = rootView.findViewById(R.id.org_name_owner_view);
+        orgEmail = rootView.findViewById(R.id.org_email_owner_view);
         orgImage = rootView.findViewById(R.id.user_profile_image);
+
+        addEvent = rootView.findViewById(R.id.button_edit_profile);
+        logout = rootView.findViewById(R.id.button_sign_out_user);
 
         recyclerView = rootView.findViewById(R.id.organization_events_recyclerview);
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
@@ -110,13 +122,13 @@ public class OrgProfileUserView extends Fragment {
         recyclerView.setAdapter(eventsAdapter);
 
         db.collection("Org_Users")
-                .document(organizerEmail)
+                .document(mUser.getEmail())
                 .collection("events")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if(error == null){
-//                            retrieving all the elements from Firebase....
+                            // retrieving all the elements from Firebase....
                             ArrayList<Event> newEvents = new ArrayList<>();
                             for(DocumentSnapshot document : value.getDocuments()){
                                 String eventReference = document.get("eventId").toString();
@@ -126,17 +138,17 @@ public class OrgProfileUserView extends Fragment {
                                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                DocumentSnapshot snap = task.getResult();
                                                 if (task.isSuccessful()) {
-                                                    DocumentSnapshot snap = task.getResult();
                                                     Object potentialOrgImage = snap.get("eventOrganizerImage");
-                                                    String orgProfileImage = (potentialOrgImage == null) ?
+                                                    String eventOrgImage = (potentialOrgImage == null) ?
                                                             null : potentialOrgImage.toString();
                                                     Event newEvent = new Event(
                                                             eventReference,
                                                             snap.get("eventName").toString(),
                                                             snap.get("eventOwnerName").toString(),
                                                             snap.get("eventOwnerEmail").toString(),
-                                                            orgProfileImage,
+                                                            eventOrgImage,
                                                             snap.get("eventLocation").toString(),
                                                             snap.get("eventTime").toString(),
                                                             snap.get("eventDescription").toString()
@@ -156,10 +168,23 @@ public class OrgProfileUserView extends Fragment {
                                             }
                                         });
                             }
-
                         }
                     }
                 });
+
+        addEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.addEvent();
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.orgProfileLogout();
+            }
+        });
 
         return rootView;
     }
@@ -167,7 +192,7 @@ public class OrgProfileUserView extends Fragment {
     private void loadData() {
         // LOAD USER INFORMATION
         db.collection("Org_Users")
-                .document(organizerEmail)
+                .document(mUser.getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -204,7 +229,7 @@ public class OrgProfileUserView extends Fragment {
         ArrayList<Event> events = new ArrayList<>();
 
         db.collection("Org_Users")
-                .document(organizerEmail)
+                .document(mUser.getEmail())
                 .collection("events")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -222,14 +247,14 @@ public class OrgProfileUserView extends Fragment {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot snap = task.getResult();
                                                     Object potentialOrgImage = snap.get("eventOrganizerImage");
-                                                    String orgProfileImage = (potentialOrgImage == null) ?
+                                                    String eventOrgImage = (potentialOrgImage == null) ?
                                                             null : potentialOrgImage.toString();
                                                     Event newEvent = new Event(
                                                             eventReference,
                                                             snap.get("eventName").toString(),
                                                             snap.get("eventOwnerName").toString(),
                                                             snap.get("eventOwnerEmail").toString(),
-                                                            orgProfileImage,
+                                                            eventOrgImage,
                                                             snap.get("eventLocation").toString(),
                                                             snap.get("eventTime").toString(),
                                                             snap.get("eventDescription").toString()
@@ -247,6 +272,7 @@ public class OrgProfileUserView extends Fragment {
                                             }
                                         });
                             }
+
                         }
                     }
                 });
@@ -256,5 +282,20 @@ public class OrgProfileUserView extends Fragment {
         events.sort(new EventComparator());
         eventsAdapter.setEvents(events);
         eventsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof IOrgProfileOwnerActions){
+            this.mListener = (IOrgProfileOwnerActions) context;
+        }else{
+            throw new RuntimeException(context.toString()+ "must implement IOrgProfileOwnerActions");
+        }
+    }
+
+    public interface IOrgProfileOwnerActions {
+        void orgProfileLogout();
+        void addEvent();
     }
 }

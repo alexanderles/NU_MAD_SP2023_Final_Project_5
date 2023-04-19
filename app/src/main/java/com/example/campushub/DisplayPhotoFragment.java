@@ -17,11 +17,10 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 
-
+/**
+ * Fragment for displaying a photo that was taken using the camera
+ */
 public class DisplayPhotoFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_URI = "imageUri";
     private static final String ARG_FRAGMENT = "fragment";
 
@@ -61,7 +60,7 @@ public class DisplayPhotoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_display_photo, container, false);
-//        ProgressBar setup init.....
+        // ProgressBar setup init.....
         progressBar = view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 

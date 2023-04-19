@@ -18,11 +18,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.campushub.Events.AddEditEventFragment;
+import com.example.campushub.Events.Event;
+import com.example.campushub.Events.EventsAdapter;
+import com.example.campushub.Events.OwnerEventView;
+import com.example.campushub.Events.UserEventView;
+import com.example.campushub.Organization.OrgProfileOwnerView;
+import com.example.campushub.Organization.OrgProfileUserView;
+import com.example.campushub.Organization.Organization;
+import com.example.campushub.Organization.OrganizationSignUpFragment;
+import com.example.campushub.Organization.OrganizationsAdapter;
+import com.example.campushub.Profile.AppInfoFragment;
+import com.example.campushub.Profile.EditProfileFragment;
+import com.example.campushub.Profile.UserProfileFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.example.campushub.Calendar.CalendarFragment;
 import com.example.campushub.Calendar.CalendarFragmentDay;
 import com.example.campushub.Calendar.CalendarFragmentMonth;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -42,13 +55,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+
+/**
+ * Main Activity for CampusHub Application
+ */
 public class MainActivity extends AppCompatActivity implements
         OrganizationSignUpFragment.IregisterFragmentAction,
         MemberSignUpFragment.ImemberRegisterFragmentAction,
         LandingFragment.IloginFragmentAction,
         CameraControlFragment.DisplayTakenPhoto,
         DisplayPhotoFragment.RetakePhoto,
-        HomeFragment.IhomeButtonActions,
         EditProfileFragment.IeditProfileActions,
         EventsAdapter.IEventRowActions,
         OrgProfileOwnerView.IOrgProfileOwnerActions,
@@ -56,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements
         OwnerEventView.IOwnerEventDetailsActions,
         NavigationFragment.INavigationActions,
         CalendarFragmentMonth.ICalendarMonthActions,
-        OrganizationsAdapter.IOrganizationRowActions{
+        OrganizationsAdapter.IOrganizationRowActions,
+        UserProfileFragment.IUserProfileAction {
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -68,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements
     private FirebaseStorage storage;
 
     private View navigationBar;
+    private boolean returningFromGallery = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,13 +112,14 @@ public class MainActivity extends AppCompatActivity implements
         if (!isInternetAvailable()) {
             Toast.makeText(MainActivity.this,
                     "Internet not available. Please connect to use this app.",
-                    Toast.LENGTH_LONG);
+                    Toast.LENGTH_LONG).show();
         }
         navigationBar = findViewById(R.id.fragmentContainerViewNav);
         navigationBar.setTransitionVisibility(View.GONE);
     }
 
     private void loadCorrectFragment(boolean isOrgUser) {
+        clearBackStack();
         if (isOrgUser) {
             // Load the org profile screen
             getSupportFragmentManager().beginTransaction()
@@ -141,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements
                     });
         } else {
             // The user is not logged in, load the login Fragment...
+            clearBackStack();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.containerMain, LandingFragment.newInstance(), "landingFragment")
                     .commit();
@@ -151,8 +171,13 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         currentUser = mAuth.getCurrentUser();
-        populateScreen();
+        if (returningFromGallery) {
+            returningFromGallery = false;
+        } else {
+            populateScreen();
+        }
     }
+
     @Override
     public void onBackPressed() {
         Fragment dayFound = getSupportFragmentManager().findFragmentByTag("dayFragment");
@@ -312,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements
     public void profileClickedNav() {
         clearBackStack();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerMain, UserProfileOwnerView.newInstance(),"homeFragment")
+                .replace(R.id.containerMain, UserProfileFragment.newInstance(),"homeFragment")
                 .addToBackStack("profile")
                 .commit();
     }
@@ -333,6 +358,21 @@ public class MainActivity extends AppCompatActivity implements
                 .commit();
     }
 
+    @Override
+    public void onOpenGalleryPressed(String fromFragment) {
+        galleryFragmentInfo = fromFragment;
+        returningFromGallery = true;
+        openGallery(fromFragment);
+    }
+
+    private void openGallery(String fromFragment) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        galleryLauncher.launch(intent);
+    }
+
     ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -348,28 +388,11 @@ public class MainActivity extends AppCompatActivity implements
                     }
                     else if (result.getResultCode() == RESULT_CANCELED) {
                         CameraControlFragment returnToControl = (CameraControlFragment) getSupportFragmentManager().findFragmentByTag("cameraFragment");
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.containerMain, returnToControl)
-                                .commit();
                     }
                 }
 
             }
     );
-
-    private void openGallery(String fromFragment) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        galleryLauncher.launch(intent);
-    }
-
-    @Override
-    public void onOpenGalleryPressed(String fromFragment) {
-        galleryFragmentInfo = fromFragment;
-        openGallery(fromFragment);
-    }
 
     @Override
     public void onRetakePressed(String fromFragment) {
@@ -386,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onUploadButtonPressed(Uri imageUri, ProgressBar progressBar, String fromFragment) {
         progressBar.setVisibility(View.VISIBLE);
-//        Upload an image from local file....
+        // Upload an image from local file....
         String childPath = "images/"+imageUri.getLastPathSegment();
         StorageReference storageReference = storage.getReference().child(childPath);
         UploadTask uploadImage = storageReference.putFile(imageUri);
@@ -403,33 +426,38 @@ public class MainActivity extends AppCompatActivity implements
                         Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
 
-                        if (fromFragment.equals("memRegisterFragment")) {
-                            MemberSignUpFragment returnFragment =
-                                    (MemberSignUpFragment) getSupportFragmentManager()
-                                            .findFragmentByTag(fromFragment);
-                            getSupportFragmentManager().popBackStack();
-                            if (galleryFragmentInfo == null) {
+                        switch (fromFragment) {
+                            case "memRegisterFragment": {
+                                MemberSignUpFragment returnFragment =
+                                        (MemberSignUpFragment) getSupportFragmentManager()
+                                                .findFragmentByTag(fromFragment);
                                 getSupportFragmentManager().popBackStack();
-                            }
-                            galleryFragmentInfo = null;
-                            getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.containerMain, returnFragment)
-                                    .commit();
-                            returnFragment.updateImage(childPath);
-                        }
-                        else if (fromFragment.equals("orgRegisterFragment")) {
-                            OrganizationSignUpFragment returnFragment =
-                                    (OrganizationSignUpFragment) getSupportFragmentManager()
-                                            .findFragmentByTag(fromFragment);
-                            getSupportFragmentManager().popBackStack();
-                            if (galleryFragmentInfo == null) {
                                 getSupportFragmentManager().popBackStack();
+                                galleryFragmentInfo = null;
+                                returnFragment.updateImage(childPath);
+                                break;
                             }
-                            galleryFragmentInfo = null;
-                            getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.containerMain, returnFragment)
-                                    .commit();
-                            returnFragment.updateImage(childPath);
+                            case "orgRegisterFragment": {
+                                OrganizationSignUpFragment returnFragment =
+                                        (OrganizationSignUpFragment) getSupportFragmentManager()
+                                                .findFragmentByTag(fromFragment);
+                                getSupportFragmentManager().popBackStack();
+                                getSupportFragmentManager().popBackStack();
+                                galleryFragmentInfo = null;
+                                returnFragment.updateImage(childPath);
+                                break;
+                            }
+                            case "edit_profile": {
+                                EditProfileFragment returnFragment =
+                                        (EditProfileFragment) getSupportFragmentManager()
+                                                .findFragmentByTag(fromFragment);
+                                getSupportFragmentManager().popBackStack();
+                                getSupportFragmentManager().popBackStack();
+                                galleryFragmentInfo = null;
+
+                                returnFragment.updateImage(childPath);
+                                break;
+                            }
                         }
                     }
                 })
@@ -444,19 +472,27 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void logoutPressed() {
+    public void editUserProfileClicked(String firstName, String lastName, String profileImagePath) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, EditProfileFragment.newInstance(firstName, lastName, profileImagePath), "edit_profile")
+                .addToBackStack("edit_profile")
+                .commit();
+    }
+
+    @Override
+    public void accountInfoClicked() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerMain, AppInfoFragment.newInstance(), "edit_profile")
+                .addToBackStack("edit_profile")
+                .commit();
+    }
+
+    @Override
+    public void signoutClicked() {
         mAuth.signOut();
         currentUser = null;
         navigationBar.setVisibility(View.GONE);
         populateScreen();
-    }
-
-    @Override
-    public void loadEditProfile(String fname, String lname, String profileImagePath) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerMain, EditProfileFragment.newInstance(fname, lname, profileImagePath), "edit_profile")
-                .addToBackStack("edit_profile")
-                .commit();
     }
 
     @Override
@@ -468,10 +504,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void loadHome() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.containerMain, HomeFragment.newInstance(),"homeFragment")
-                .commit();
+    public void saveProfileChangesClicked() {
+        getSupportFragmentManager().popBackStack();
     }
 
     @Override

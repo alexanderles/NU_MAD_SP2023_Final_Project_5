@@ -1,4 +1,4 @@
-package com.example.campushub;
+package com.example.campushub.Profile;
 
 import android.os.Bundle;
 
@@ -8,14 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link UserProfileOwnerView#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class UserProfileOwnerView extends Fragment {
+import com.example.campushub.R;
 
-    public UserProfileOwnerView() {
+/**
+ * Fragment for Application Information
+ */
+public class AppInfoFragment extends Fragment {
+
+    public AppInfoFragment() {
         // Required empty public constructor
     }
 
@@ -23,10 +23,10 @@ public class UserProfileOwnerView extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment UserProfileOwnerView.
+     * @return A new instance of fragment AppInfoFragment.
      */
-    public static UserProfileOwnerView newInstance() {
-        UserProfileOwnerView fragment = new UserProfileOwnerView();
+    public static AppInfoFragment newInstance() {
+        AppInfoFragment fragment = new AppInfoFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -35,14 +35,12 @@ public class UserProfileOwnerView extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_profile_owner_view, container, false);
+        return inflater.inflate(R.layout.fragment_app_info, container, false);
     }
 }

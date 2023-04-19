@@ -1,4 +1,4 @@
-package com.example.campushub;
+package com.example.campushub.Events;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,19 +9,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.campushub.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for displying Events
+ */
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder>{
 
     private ArrayList<Event> events;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseUser mUser = mAuth.getCurrentUser();
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private IEventRowActions mListener;
     private Context mContext;

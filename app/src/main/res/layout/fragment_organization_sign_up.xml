@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OrganizationSignUpFragment" >
+    tools:context=".Organization.OrganizationSignUpFragment" >
 
     <ImageView
         android:id="@+id/orgProfilePhoto"
@@ -20,10 +20,12 @@
 
     <Button
         android:id="@+id/button_register"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
         android:layout_marginTop="16dp"
+        android:backgroundTint="@color/campus_hub_color"
         android:text="@string/register"
+        app:cornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="@+id/orgProfilePhoto"
         app:layout_constraintStart_toStartOf="@+id/orgProfilePhoto"
         app:layout_constraintTop_toBottomOf="@+id/orgProfilePhoto" />
@@ -97,12 +99,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="64dp"
-        android:text="@string/member_signup"
+        android:text="@string/orgainzation"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/orgainzation" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editText_orgname"

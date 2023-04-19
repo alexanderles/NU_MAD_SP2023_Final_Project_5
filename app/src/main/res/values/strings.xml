@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">CampusHub</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="campus_hub_name">CampusHub</string>
     <string name="campus_hub_image">Campus Hub Image</string>
@@ -55,14 +54,14 @@
     <string name="register">Register</string>
     <string name="Register2">Register</string>
     <string name="registerclub">Register as a club</string>
-    <string name="RegisterMember">Register as a memeber</string>
+    <string name="RegisterMember">Register as a member</string>
     <string name="email_text">Email</string>
     <string name="switchcam">Switch Camera</string>
     <string name="Gallery">Gallery</string>
     <string name="Photo">Photo</string>
     <string name="retake">Retake</string>
     <string name="confirm">Confirm</string>
-    <string name="jihi">hiiink</string>
+    <string name="jihi">PLACEHOLDERSTRING</string>
     <string name="editProfile2">Edit Profile</string>
     <string name="signout">Sign Out</string>
     <string name="firstName">First Name</string>
@@ -79,4 +78,10 @@
     <string name="name_month_day_placeholder">Day</string>
     <string name="search_icon_descrip">Search Icon</string>
     <string name="no_events_text">No Events Scheduled</string>
+    <string name="app_info_paragraph_text">Thanks for using CampusHub!
+
+This application was developed by Marko Krstulovic, Rishabh Sahu, and Alexander Les
+for CS4520 Mobile App Development at Northeastern University under
+Professor Sakib Miazi. </string>
+    <string name="app_info_label_text">App Info</string>
 </resources>

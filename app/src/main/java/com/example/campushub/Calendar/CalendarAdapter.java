@@ -7,19 +7,21 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.campushub.Event;
+import com.example.campushub.Events.Event;
 import com.example.campushub.R;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * Adapter for Calendar Fragment
+ */
 class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
-    private final String TAG = "TAG";
     private final LocalDate today;
     private final ArrayList<String> daysOfMonth;
     private final OnCalendarItemListener onCalendarItemListener;
     private final boolean isCurrentMonth;
-    private LocalDate selectedDate;
+    private final LocalDate selectedDate;
     private ArrayList<Event> events;
 
     public CalendarAdapter(LocalDate today,

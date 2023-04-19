@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.campushub.R;
 
+/**
+ * View Holder for a day of the month in the Calendar Month View
+ */
 public class CalendarViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 {
     private final TextView dayOfMonth;

@@ -1,7 +1,10 @@
-package com.example.campushub;
+package com.example.campushub.Organization;
 
 import java.io.Serializable;
 
+/**
+ * Class representing an Organization that can host events
+ */
 public class Organization implements Serializable {
     private String organizationId;
     private String Org_Name;

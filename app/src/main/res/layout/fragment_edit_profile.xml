@@ -5,7 +5,7 @@
     android:id="@+id/EditProfileConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditProfileFragment" >
+    tools:context=".Profile.EditProfileFragment" >
 
     <ImageView
         android:id="@+id/imageView_camera"
@@ -46,10 +46,12 @@
 
     <Button
         android:id="@+id/button_save_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
         android:layout_marginTop="44dp"
+        android:backgroundTint="@color/campus_hub_color"
         android:text="@string/save_text"
+        app:cornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="@+id/edit_lastName"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="@+id/edit_lastName"

@@ -5,7 +5,7 @@
     android:id="@+id/event_details_owner_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OwnerEventView">
+    tools:context=".Events.OwnerEventView">
 
     <TextView
         android:id="@+id/event_title_text_owner"

@@ -1,4 +1,4 @@
-package com.example.campushub;
+package com.example.campushub.Profile;
 
 import android.content.Context;
 import android.net.Uri;
@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.campushub.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +29,9 @@ import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-
+/**
+ * Fragment for a user to edit their profile and account details
+ */
 public class EditProfileFragment extends Fragment {
 
     private static final String ARG_FNAME = "fname";
@@ -94,7 +97,9 @@ public class EditProfileFragment extends Fragment {
         edit_lastName = rootView.findViewById(R.id.edit_lastName);
         edit_lastName.setText(lname);
         button_save_profile = rootView.findViewById(R.id.button_save_profile);
-        loadImage();
+        if (profileImagePath != null && newProfileImagePath == null) {
+            loadImage();
+        }
 
         imageView_camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,16 +111,16 @@ public class EditProfileFragment extends Fragment {
         button_save_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DocumentReference userInfo = db.collection("users").document(mUser.getEmail());
+                final DocumentReference userInfo = db.collection("Member_Users").document(mUser.getEmail());
 
                 db.runTransaction(new Transaction.Function<Void>() {
                     @Nullable
                     @Override
                     public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                        transaction.update(userInfo, "fname", edit_Firstname.getText().toString());
-                        transaction.update(userInfo, "lname", edit_lastName.getText().toString());
+                        transaction.update(userInfo, "firstname", edit_Firstname.getText().toString());
+                        transaction.update(userInfo, "lastname", edit_lastName.getText().toString());
                         if (newProfileImagePath != null) {
-                            transaction.update(userInfo, "profileimage", newProfileImagePath);
+                            transaction.update(userInfo, "profileImage", newProfileImagePath);
                         }
                         return null;
                     }
@@ -123,7 +128,7 @@ public class EditProfileFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            mListener.loadHome();
+                            mListener.saveProfileChangesClicked();
                         }
                         else {
                             Toast.makeText(getActivity(),
@@ -168,12 +173,12 @@ public class EditProfileFragment extends Fragment {
     }
 
     public void updateImage(String imagePath) {
+        newProfileImagePath = imagePath;
         StorageReference imageToLoad = storage.getReference().child(imagePath);
         imageToLoad.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
-                    newProfileImagePath = imagePath;
                     Glide.with(getActivity())
                             .load(task.getResult())
                             .centerCrop()
@@ -189,6 +194,6 @@ public class EditProfileFragment extends Fragment {
 
     public interface IeditProfileActions {
         void loadTakeNewProfilePhoto();
-        void loadHome();
+        void saveProfileChangesClicked();
     }
 }
