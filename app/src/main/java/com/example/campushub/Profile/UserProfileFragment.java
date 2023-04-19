@@ -58,7 +58,7 @@ public class UserProfileFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment UserProfileOwnerView.
+     * @return A new instance of fragment UserProfileFragment.
      */
     public static UserProfileFragment newInstance() {
         UserProfileFragment fragment = new UserProfileFragment();
