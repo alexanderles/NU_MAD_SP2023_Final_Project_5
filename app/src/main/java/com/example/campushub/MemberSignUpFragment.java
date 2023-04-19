@@ -31,6 +31,9 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Fragment for users to register
+ */
 public class MemberSignUpFragment extends Fragment implements View.OnClickListener {
 
     private FirebaseAuth mAuth;

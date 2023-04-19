@@ -11,6 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+/**
+ * Navigation bar fragment allowing a user to navigate between
+ *  - Home
+ *  - Search
+ *  - Calendar
+ *  - Profile
+ */
 public class NavigationFragment extends Fragment {
 
     private ImageView home;

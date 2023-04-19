@@ -30,6 +30,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ * Fragment for user's home page in the application. This displays the user's
+ * upcoming events
+ */
 public class HomeFragment extends Fragment {
 
     private static final String ARG_EVENT = "events";

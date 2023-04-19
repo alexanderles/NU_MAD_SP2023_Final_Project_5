@@ -27,7 +27,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-
+/**
+ * Fragment where a user can search for organizations
+ */
 public class SearchFragment extends Fragment {
 
     private static final String ARG_ORGS = "organizations";

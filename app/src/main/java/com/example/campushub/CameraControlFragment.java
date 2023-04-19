@@ -1,5 +1,3 @@
-//Marko Krstulovic
-//CS4250 In-Class Assignment 09
 package com.example.campushub;
 
 import android.content.ContentValues;
@@ -29,7 +27,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
 
-
+/**
+ * Fragment for taking pictures using the camera application
+ */
 public class CameraControlFragment extends Fragment implements View.OnClickListener {
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
@@ -89,7 +89,7 @@ public class CameraControlFragment extends Fragment implements View.OnClickListe
         buttonSwitchCamera.setOnClickListener(this);
         buttonOpenGallery.setOnClickListener(this);
 
-//        default lense facing....
+        // default lense facing....
         lenseFacing = lenseFacingBack;
 
         setUpCamera(lenseFacing);
@@ -100,7 +100,7 @@ public class CameraControlFragment extends Fragment implements View.OnClickListe
 
 
     private void setUpCamera(int lenseFacing) {
-        //            binding hardware camera with preview, and imageCapture.......
+        // binding hardware camera with preview, and imageCapture.......
         cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
         cameraProviderFuture.addListener(()->{
             preview = new Preview.Builder()
@@ -146,7 +146,6 @@ public class CameraControlFragment extends Fragment implements View.OnClickListe
                 new ImageCapture.OnImageSavedCallback() {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-//                        Log.d("demo", "onImageSaved: "+ outputFileResults.getSavedUri());
                         mListener.onTakePhoto(outputFileResults.getSavedUri(), fromFragment);
                     }
 
